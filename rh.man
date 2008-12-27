@@ -1,0 +1,889 @@
+.TH RH 1 "18 July 1993"
+.SH NAME
+rh \- recursive file locater (rawhide) >> VERSION 3.0r <<
+.LP
+.SH SYNOPSIS
+\fBrh\fP [\fB-CDFLVbcdhilqrstvw\fP] [\fB-f filename\fP]
+[\fB-e expression\fP] [\fB-p format\fP] [\fB-x command\fP]
+[\fBfile ...\fP]
+.RE
+.LP
+.SH DESCRIPTION
+.B rh
+recursively searches the file system starting at each given
+.I file
+for files that make a C expression true. If no files
+are listed, the current working directory is used.
+.LP
+Expressions for \fBrh\fP can come from the command line (with the
+\fI-e\fP option) or a file (with the \fI-f\fP option).
+The basic form of an \fBrh\fP expression is a C expression which 
+may optionally define and or call user defined functions. These
+C expressions may contain constants, variables, and all the usual
+C operators.
+.LP
+\fIConstants\fP are either numeric or symbolic. Symbolic constants
+are based on the constants defined in the file \fIstat.h\fP (found in
+system include directory, \fI/usr/include/sys/\fP on many systems).
+(Only the useful constants are implemented.)
+The ``\fBS_\fP'' prefix from the symbol name is omitted.
+(eg. \fBS_IFMT\fP would used as \fBIFMT\fP).
+.LP
+\fIVariables\fP are symbols that specify a field in the stat structure
+(e.g., \fBst_size\fP, \fBst_mode\fP, etc.) or some other attribute of 
+the file. For each file examined by \fBrh\fP,
+these internal variables are updated to match the current file. For
+convenience, the ``\fBst_\fP'' prefix is dropped from variable names.
+.LP
+\fIFunctions\fP are a means of associating a C expression with a function 
+name. This allows complex expressions to be easily composed from simpler 
+ones. The value of a function call is the value of the expression 
+represented by the function. For example:
+.LP
+.RS 8
+foo(x)
+.br
+{
+.br
+    return( x-1 );
+.br
+}
+.RE
+.LP
+If the above function were given to \fBrh\fP, it would define a function
+that could be used later. If \fIfoo\fP were called with 667, then \fIfoo\fP
+would return 666.
+.LP
+.SH OPTIONS
+\fBrh\fP options can appear in any order; multiple options can be given 
+within the same argument.
+.TP
+.I \-b
+Print leading "./" as directory name if no directories are specified.
+.TP
+.I \-c
+Do not read \fBrh\fP startup file (specified by
+.SB RHRC
+environment variable). (See
+.SM \fBSearch Order\fP
+for more information.)
+.TP
+.I \-d
+Causes a leading '?' or '*' in a filename pattern to match a
+leading '.' in the filename being matched.
+.TP
+.I \-e expression
+\fIexpression\fP is \fBrh\fP code to compile. It can consist of 
+function definitions and/or an expression. Since many of the operators
+are also shell meta-characters and since \fBrh\fP expressions may
+contain spaces, it is strongly recommended that the \fIexpression\fP
+be enclosed in single quotes ('').  If both \fB-e\fP and \fB-f\fP
+options occur together then the \fB-f\fP options are processed FIRST.
+This means that expressions specified with \fB-e\fP options may use
+functions defined in the files specified with \fB-f\fP options.
+.RS
+.LP
+This option may be used any number of times. \fI-e\fP switch values are
+processed in the order that they occur in the command line.
+.RE
+.TP
+.I \-f filename
+Uses \fIfilename\fP as the name of a file containing \fBrh\fP
+expressions. Functions may also be defined in this file. If
+\fIfilename\fP is ``-'' then expressions are read from standard input
+.RS
+.LP
+This option may be used any number of times. Files are processed in the
+order that they occur in the command line.
+.RE
+.TP
+.I \-h
+Causes \fBrh\fP to display a help message and exit. The message explains 
+the command line usage, a list of available constants and variables, and
+a list of valid operators.
+.TP
+.I \-i
+Ignore case of letters when matching filenames against a pattern
+(see 
+.SM \fBSpecial Operators\fP 
+below).
+.TP
+.I \-l
+Normally \fBrh\fP prints each matching filename on a line by itself.  
+The \fI-l\fP option causes the matching files' permission modes and 
+sizes to be displayed as well. The format is similar to that of the
+\fIls\fP(1) command. (Also see \fI-v\fP and \fI-s\fP below.)
+.TP
+.I \-p format
+Output file names and/or other file information using \fIformat\fP.
+The \fIformat\fP is a string containing three types of objects: normal 
+characters that are output as is, escaped characters that are converted 
+to control characters, and substitution markers that indicate which part 
+of a file name or piece of file information is to be output.
+.RS
+.LP
+Most of the standard C-like escape characters (and possibly a few that
+aren't standard) are recognized. Valid escape characters are:
+.RE
+.RS
+.RS
+.PD 0
+.TP
+.B \ea
+.SM ALERT
+(bell)
+.TP
+.B \eb
+.SM BACKSPACE
+.TP
+.B \ef
+.SM FORMFEED
+.TP
+.B \en
+.SM NEWLINE
+.TP
+.B \er
+.SM RETURN
+.TP
+.B \et
+.SM TAB
+.TP
+.B \ev
+.SM vertical TAB
+.TP
+.BI \e0 n
+the 8-bit character whose
+.SM ASCII
+code is the 1-, 2-, or 3-digit octal number \fIn\fP.
+.TP
+.BI \e0X n
+the 8-bit character whose
+.SM ASCII
+code is the 1- or 2-digit hexadecimal number \fIn\fP.
+The `\fBX\fP' may be either lower or upper case.
+.RE
+Any other characters preceded by a `\fB\e\fP' are output `as is'.
+Note that strings containing `\fB\e\fP' characters should be quoted
+in a way that prevents the shell from interpretting them.
+.PD
+.LP
+Substition markers are a `\fB%\fP' (percent sign) followed by a character
+indicating what is to be output. The substitution characters are:
+.RS
+.PD 0
+.TP
+.B a
+Last access time of file as an \fIls\fP(1) type time string
+.TP
+.B A
+Last access time of file in seconds
+.TP
+.B b
+Size of file in blocks
+.TP
+.B B
+Filesystem's preferred block size in bytes
+.TP
+.B c
+Last status change time of file as an \fIls\fP(1) type time string
+.TP
+.B C
+Last status change time of file in seconds
+.TP
+.B d
+Parent directory of file
+.TP
+.B D
+Depth of file relative to search starting point
+.TP
+.B g
+Numerical group id of file owner
+.TP
+.B G
+Group name (from /etc/group) of file owner or numerical group id if a
+group name is not found
+.TP
+.B i
+File's inode number
+.TP
+.B l
+Number of hard links to file
+.TP
+.B m
+Last modification time of file as an \fIls\fP(1) type time string
+.TP
+.B M
+Last modification time of file in seconds
+.TP
+.B n
+Full path of file
+.TP
+.B N
+Base name of file
+.TP
+.B p
+File permissions in symbolic form
+.TP
+.B P
+File permissions as an octal number
+.TP
+.B r
+If the file is a block or character special device then output the minor
+device number, else output `\fIxxxx\fP'.
+.TP
+.B R
+If the file is a block or character special device then output the major
+device number, else output `\fIxxxx\fP'.
+.TP
+.B s
+Full path of file
+.TP
+.B S
+Base name of file
+.TP
+.B u
+Numerical user id of file owner
+.TP
+.B U
+User name (from /etc/passwd) of file owner or numerical user id if a
+user name is not found
+.TP
+.B w
+The minor device number of device where file resides.
+.TP
+.B W
+The major device number of device where file resides.
+.TP
+.B z
+File size in bytes.
+.RE
+Any other characters preceded by a `\fB%\fP' are output `as is'.
+.RE
+.PD
+.TP
+.I \-q
+Display non-graphic (i.e. non-ascii, control, or white space) characters
+in filenames as a \fB?\fP. This is automatically turned on if output
+is to a terminal.
+.TP
+.I \-r
+Prevents \fBrh\fP from recursively searching for files.
+.TP
+.I \-s
+Print owner and group instead of the owner's UID and group's GID when
+both \fI-l\fP and \fI-v\fP options are used.
+.TP
+.I \-t
+Print full dates/times instead of \fIls\fP(1) format dates/times when
+using the \fI-l\fP and \fI-v\fP switches or any of the date/time
+formats with the \fI-p\fP switch.
+.TP
+.I \-v
+Causes the \fI-l\fP option to output more information and the
+\fI-x\fP option to print out the command executed and the command's
+exit value.
+.TP
+.I \-w
+Enable warnings about function parameters that are not referenced, etc.
+.TP
+.I \-x command
+Execute \fIcommand\fP using \fBsystem\fP(3) for each matching file.
+The string \fIcommand\fP may contain a \fB%s\fP which will be
+substituted with the full path name. A \fB%S\fP (uppercase 'S') will
+be substituted with the base name. For example, given the file
+\fI/etc/passwd\fP the values for \fB%s\fP and \fB%S\fP would be:
+\fI/etc/passwd\fP and \fIpasswd\fP, respectively.
+.TP
+.I \-C
+Do not descend into directories that reside on a file system that is different
+than the file system the current command line argument path resides on.
+.TP
+.I \-D
+Follow symbolic links that point to directories when searching for files.
+.TP
+.I \-F
+Follow symbolic links that point to non-directories.
+.TP
+.I \-L
+Follow all symbolic links.
+.TP
+.I \-V
+Writes the version of \fBrh\fP to stderr and exits.
+.LP
+.SH USAGE
+.SS "rh grammar"
+This is the grammar that \fBrh\fP will accept.
+.LP
+.TP
+<program> ::=
+.RS 6
+		<function list> <expression> EOF
+.br
+		| <function list> <expression> ;
+.RE
+.LP
+.TP
+<function list> ::=
+.RS 6
+		<function list> <function>
+.br
+		| <function>
+.br
+		| /* empty */
+.RE
+.LP
+.TP
+<function> ::=
+.RS 6
+		<function heading> { RETURN <expression> ; }
+.RE
+.LP
+.TP
+<function heading> ::=
+.RS 6
+		IDENTIFIER
+.br
+		| IDENTIFIER ( )
+.br
+		| IDENTIFIER ( <idlist> )
+.RE
+.LP
+.TP
+<idlist> ::=
+.RS 6
+		<idlist> , IDENTIFIER
+.br
+		| IDENTIFIER
+.RE
+.LP
+.TP
+<expression> ::=
+.RS 6
+		<expression> ? <expression> : <expression>
+.br
+		| <expression> || <expression>
+.br
+		| <expression> && <expression>
+.br
+		| <expression> | <expression>
+.br
+		| <expression> ^ <expression>
+.br
+		| <expression> & <expression>
+.br
+		| <expression> == <expression>
+.br
+		| <expression> != <expression>
+.br
+		| <expression> < <expression>
+.br
+		| <expression> > <expression>
+.br
+		| <expression> <= <expression>
+.br
+		| <expression> >= <expression>
+.br
+		| <expression> >> <expression>
+.br
+		| <expression> << <expression>
+.br
+		| <expression> + <expression>
+.br
+		| <expression> - <expression>
+.br
+		| <expression> * <expression>
+.br
+		| <expression> / <expression>
+.br
+		| <expression> % <expression>
+.br
+		| ~ <expression>
+.br
+		| ! <expression>
+.br
+		| - <expression>
+.br
+		| <factor>
+.RE
+.LP
+.TP
+<factor> ::=
+.RS 6
+		( <expression> )
+.br
+		|    NUMBER
+.br
+		|    <function call>
+.br
+		|    IDENTIFIER
+.br
+		|    [ <datetimespec> ]
+.br
+		|    STRING
+.RE
+.LP
+.TP
+<function call> ::=
+.RS 6
+		IDENTIFIER
+.br
+		| IDENTIFIER ( <exprlist> )
+.br
+		| IDENTIFIER ( )
+.RE
+.LP
+.TP
+<exprlist> ::=
+.RS 6
+		<exprlist> , <expression>
+.br
+		| <expression>
+.RE
+.LP
+.TP
+<datetimespec> ::=
+.RS 6
+		[ <anything getdate will accept> ]
+.RE
+.LP
+.SS "Search Order"
+\fBrh\fP first attempts to read the \fBrh\fP startup file (specified
+by the
+.SB RHRC
+environment variable). Next, any files specified
+with \fI-f\fP switches are read (in command line order). Finally,
+expressions specified with \fI-e\fP switches are read (in command
+line order). If an expression that is out side of a function is not
+found then \fBrh\fP will simply print out the names of all files in
+the directory trees given on the command line (or the current
+directory if no directories were specified).
+.LP
+\fBrh\fP uses two environment variables,
+.SB RHRC
+and
+.SB RHPATH
+, when looking for expression/function files to compile.
+.LP
+.SB
+RHRC
+contains the name of a file that is read before any files
+specified with the \fI-f\fP switch or expressions specified with the
+\fI-e\fP switch. If
+.SB RHRC
+is not set then `\fI.rhrc\fP' is used.
+This file will not be read if the \fI-c\fP switch is specified.
+.LP
+.SB RHPATH
+contains a colon-separated list of directories that
+\fBrh\fP searches in order for the
+.SB RHRC
+file and files specified with the \fI-f\fP switch. If
+.SB RHPATH
+is not set then the user's home directory is used.
+.LP
+.SS "The valid constants are:"
+.IP NOW
+Time, in seconds since the epoch, that \fBrh\fP started execution. It
+is normally used to make comparisons with atime, ctime, or mtime.
+.IP days
+Number of seconds in a day.
+.IP hours
+Number of seconds in an hour.
+.IP weeks
+Number of seconds in a week.
+.IP "IEXEC IFBLK IFCHR IFDIR IFIFO IFLNK IFMT IFREG IFSOCK"
+.PD 0
+.IP "IREAD IRGRP IROTH IRUSR IRWXG IRWXO IRWXU ISGID ISUID"
+.IP "ISVTX IWGRP IWOTH IWRITE IWUSR IXGRP IXOTH IXUSR"
+.PD
+see \fIstat\fP(2) for an explanation.
+.SS "The valid variables are:"
+.LP
+.IP depth
+This variable is set to the relative depth in the directory search
+that the current file is at.
+.IP "strlen or baselen"
+This is set to the length of the filename. For example, strlen would be
+equal to 4 given the file "/tmp/core" because "core" is 4 characters
+long.
+.IP dirlen
+This is set to the length of directory. For example, dirlen would be
+equal to 4 given the file "/tmp/core" because "/tmp" is 4 characters
+long. Another example: dirlen would be set to 1 given the file "/vmunix"
+because "/" is 1 character long.
+.IP pathlen
+This is set to the length of the entire path (directory and filename).
+For example, pathlen would be equal to 9 given the file "/tmp/core".
+.IP prune
+This variable always returns 0, but as a side-effect causes the
+search path to be "cut-short" when evaluated. This can be used to prune the
+directory search.
+.I prune
+is usually used with the ?: operator to conditionally evaluate the prune
+variable.
+.IP nogroup
+This variable is true if the file belongs to a group that is not in the
+system group file.
+.IP nouser
+This variable is true if the file belongs to a user that is not in the
+system user file.
+.IP "atime ctime dev gid ino mode mtime nlink rdev size uid"
+see
+.IR stat (2)
+for an explanation.
+.IP "owner user"
+synonyms for uid.
+.IP group
+synonym for gid.
+.IP isblk
+This variable is true if the file is a block special file.
+.IP ischr
+This variable is true if the file is a character special file.
+.IP isdir
+This variable is true if the file is a directory file.
+.IP isfifo
+This variable is true if the file is a pipe or FIFO special file.
+.IP islnk
+This variable is true if the file is a symbolic link.
+.IP isreg
+This variable is true if the file is a regular file.
+.IP issock
+This variable is true if the file is a socket.
+.SS "The valid C operators are:"
+.LP
+!  ~  -  *  /  %  +  <  <=  >  >=  ==  !=  &  ^  |  <<  >>  &&  ||  ?:
+.LP
+Operator precedence, associativity and semantics are the same as
+in C.
+.SS "Special operators:"
+.IP \fB$\fIusername\fP
+This operator evaluates to the integer user id of \fIusername\fP.
+As a special case the symbol `\fB$$\fP' evaluates to the
+uid of the user currently running \fBrh\fP.
+.IP \fB@\fIgroupname\fP
+This operator evaluates to the integer group id of \fIgroupname\fP.
+As a special case the symbol `\fB@@\fP' evaluates to the
+gid of the user currently running \fBrh\fP.
+.IP \fB\`\fIfilesystem-type\fP
+This operator (back-tick) is true if the current file resides on a
+filesystem that is of type \fIfilesystem-type\fP.
+.IP \fB"\fP*.c\fB"\fP
+This operator evaluates to true if the current filename matches
+the quoted expression, which is a shell globbing pattern.
+The recognized meta-characters are:
+.PD 0
+.RS
+.RS
+.IP \fB*\fP
+matches any string, including the null string. 
+A leading ``.'' is not matched unless the \fI-d\fP switch is specified.
+.IP \fB?\fP
+matches any single character.
+A leading ``.'' is not matched unless the \fI-d\fP switch is specified.
+.IP \fB[\fISET\fB]\fP
+matches any character in the given set. A range of characters may be
+specified by using a hyphen between two characters (e.g. a-l matches
+any character lexically between `a' and `l').
+.IP \fB[^\fISET\fB]\fP
+matches any character not in the given set (ranges are also allowed)
+.RE
+.LP
+`\e' can be used to escape the special meaning of any of the above 
+meta-characters.
+.br
+Only the base name is examined when doing comparisions. Leading paths
+are not checked.
+.RE
+.PD
+.IP \fB[\fIdate/time\fB]\fP
+The \fIdate/time\fP enclosed in the brackets, ``\fB[]\fP'', will evaluate
+to a number of seconds past January 1, 1970, which is suitable for
+comparing with atime, mtime or ctime.
+.br
+There are numerous formats that can be used for the date/time specification.
+Some examples are:
+.PD 0
+.RS
+.IP
+[Thu Mar 02 19:07:25 CST 1992]
+.IP
+[Mar 02 19:07:25]
+.IP
+[03/02 19:07:25]
+.IP
+[12/30/91]
+.IP
+[10:15]
+.IP
+[yesterday]
+.IP
+[4 days ago]
+.RE
+.IP
+There are many other formats that are acceptable. In addition the special
+format ``[yyyy/mm/dd]'' is accepted for compatibility with older versions 
+of \fBrh\fP.
+.PD
+.LP
+The special operators have higher precedence than the C operators.
+.SS "Lexical conventions:"
+.LP
+Numbers may be entered in octal by preceding them with a leading zero or
+in hexadecimal by preceding them with a leading
+.RB ` 0x '
+(the
+.RB ` x '
+may be either lower or upper case). Otherwise numbers are taken to be in
+decimal.
+.LP
+Decimal numbers that are followed by one of
+.RB ` mhdw '
+with no intervening white space are converted to the number of seconds
+in the corresponding number of minutes, hours, days, or weeks,
+respectively. Also, decimal numbers that are followed by one of
+.RB ` KMG '
+with no intervening white space are multiplied by 1024 (kilo-), 1024 *
+1024 (mega-), or 1024 * 1024 * 1024 (giga-), respectively.
+.LP
+Text enclosed in \fB/*\fP and \fB*/\fP will be ignored. This can be
+used for commenting \fBrh\fP expression files.
+.LP
+The start expression may be terminated by either
+a ``;'', the end of the file, or the end of the argument.
+.LP
+.SH EXAMPLES
+The following are examples of
+.B rh
+expressions.
+.LP
+(mode & 022) && (uid == $joe );
+.RS 8
+Matches all files that have uid equal to username ``joe'' and
+are writable by other people.
+.RE
+.LP
+!uid && (mode & ISUID ) && (mode & 02);
+.RS 8
+Matches all files that are owned by root (uid==0) and that
+have set-uid on execution bit set, and are writable.
+.RE
+.LP
+(size > 10K) && (mode & 0111) && (atime <= NOW-24h);
+.RS 8
+Finds all executable files larger than 10K that
+have not been executed in the last 24 hours.
+.RE
+.LP
+size < ( ("*.c") ? 4K : 32K );
+.RS 8
+Finds C source files smaller than 4K and other files smaller than 32K.
+No other files will match.
+.RE
+.LP
+!(size % 1K);
+.RS 8
+Matches files that are a multiple of 1K.
+.RE
+.LP
+mtime >= [1982/3/1] && mtime <= [1982/3/31];
+.RS 8
+Finds files that were modified during March, 1982.
+.RE
+.LP
+strlen >= 4 && strlen <= 10;
+.RS 8
+This expression will print files whose filenames are between
+4 and 10 characters in length.
+.RE
+.LP
+depth > 3;
+.RS 8
+Matches files that are at a RELATIVE depth of 3 or more.
+.RE
+.LP
+( "tmp" || "bin" ) ? prune : "*.c";
+.RS 8
+This expression does a search for all "*.c" files, however it will
+not look into any directories called "bin" or "tmp". This is because when
+such a filename is encountered the prune variable is evaluated, causing
+further searching with the current path to stop. The general form of this
+would be:
+.LP
+  ("baddir1" || "baddir2" || ... || "baddirn") ?
+.br
+.RS 8
+prune : <search expr>;
+.RE
+.RE
+.LP
+.SH "ADVANCED EXAMPLES"
+The following examples show the use of function definitions and other
+advanced features of \fBrh\fP.
+.LP
+Consider:
+.LP
+.RS 8
+dir()
+.br
+{
+.br
+    return ( (mode & IFMT) == IFDIR );
+.br
+}
+.br
+.RE
+.LP
+This declares a function that returns true if the current file is a directory
+and false otherwise. The function
+.I dir
+now may be used in other expressions.
+.LP
+.RS 8
+dir() && !mine();
+.RE
+.LP
+This matches files that are directories and are not owned by
+the user. This assumes the user has written a mine() function. Since
+.I dir
+and
+.I mine
+take no arguments they may be called like:
+.LP
+.RS 8
+dir && !mine;
+.RE
+.LP
+Also when declaring a function that takes no arguments the parenthesis
+may be omitted. For example:
+.LP
+.RS 8
+mine
+.br
+{
+.br
+    return uid == $joe;
+.br
+}
+.br
+.RE
+.LP
+This declares a function mine, that evaluates true when a file
+is owned by user name `joe'. An alternate way to write mine would be:
+.LP
+.RS 8
+mine(who)
+.br
+{
+.br
+    return uid == who;
+.br
+}
+.br
+.RE
+.LP
+This would allow mine to be called with an argument, for example:
+.LP
+.RS 8
+mine( $sue ) || mine( $joe );
+.RE
+.LP
+This expression is true of any file owned by user name `sue' or `joe'.
+Since the parenthesis are optional for functions that take no arguments,
+it would be possible to define functions that can be used exactly like
+constants, or handy macros. Suppose the above definition of
+.I dir
+was placed in a user's 
+.I $HOME/.rhrc
+Then the command:
+.LP
+.RS 8
+rh -e dir
+.RE
+.LP
+would execute the expression `dir' which will print out all directories.
+.LP
+.SH "SPECIAL NOTES"
+\fBrh\fP functions can be recursive.
+.LP
+\fBrh\fP works by "compiling" functions and expressions into an internal
+stack based language. During this "compilation" process some simple
+optimizations are done on expressions.
+.RS
+.TP
+Constant Expression Folding.
+Arithmetic expressions are replaced with their value instead of
+evaluating the expression for each file \fBrh\fP examines.
+.TP
+Constant Function Substitution.
+Functions that are reduced to a constant (after Constant Expression 
+Folding) are never called. When they are referenced in another function
+or expression the compiler will use the constant value instead.
+.TP
+Simple Function Substitution.
+Functions that just return one of their parameters are never called.
+When they are referenced, the parameter that is to be returned is
+"compiled" in the function's place (even if the parameter is a
+complex expression).
+.RE
+.LP
+.SH FILES
+.TP 10
+.SB $HOME/.rhrc
+Default file \fBrh\fP compiles of \fI-c\fP switch is not specified
+and both
+.SB RHRC
+and
+.SB RHPATH
+environment variables are not set.
+.LP
+.SH ENVIRONMENT
+.TP 10
+.SB RHPATH
+Colon-separated list of directories to search for the \fBrh\fP
+start up file and any files specified using the \fI-f\fP switch.
+See 
+.SM \fBSearch Order\fP
+for more information. If
+.SB RHPATH
+is not set then the user's home directory is used for the search
+path.
+.TP 10
+.SB RHRC
+The name of an \fBrh\fP startup file. If 
+.SB RHRC
+is not set in the environment then \fI.rhrc\fP will be used.
+.LP
+.SH "SEE ALSO"
+.BR chmod (1),
+.BR find (1),
+.BR ls (1),
+.BR stat (2),
+.BR getopt (3),
+.BR group (5),
+.BR passwd (5)
+.LP
+The C programming language.
+.LP
+.SH DIAGNOSTICS
+Exit status is 0 on success and 1 if an error occurs (permission error,
+command executed with \fI-x\fP fails, etc.).
+.LP
+.SH AUTHOR
+Ken Stauffer (University of Calgary)
+.br
+stauffer@sixk
+.LP
+.sp
+Enhancements, bug fixes, and other modifications by:
+.br
+Rick Ohnemus (Sterling Software)
+.br
+rick@Sterling.COM  or uunet!sparky!rick
+.br
+(Please report bugs in this version to me instead of Ken Stauffer.)
+.LP
+.SH BUGS
+The date operator can be off by a day, if the time on the file is close
+to midnight. (is this still true???)
+.LP
+Functions must be defined before they are referenced.

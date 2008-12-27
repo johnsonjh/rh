@@ -1,0 +1,85 @@
+// rcsid: $Id: rhrc.1,v 1.1 1994/01/12 19:39:50 rick Exp $
+
+dir() {
+	return( (mode & IFMT) == IFDIR );
+}
+
+plain()
+{
+	return( (mode & IFMT) == IFREG );
+}
+
+link()
+{
+	return( (mode & IFMT) == IFLNK );
+}
+
+socket()
+{
+	return( (mode & IFMT) == IFSOCK );
+}
+
+fifo()
+{
+	return( (mode & IFMT) == IFIFO );
+}
+
+months
+{
+	return days*30;
+}
+
+nlinks { return nlink; }
+
+ago(d)
+{
+	return( NOW - d );
+}
+
+writable()
+{
+	return mode & 022;
+}
+
+readable()
+{
+	return mode & 004;
+}
+
+executable()
+{
+	return ((mode & IFMT) == IFREG) && (mode & (IXUSR | IXGRP | IXOTH));
+}
+
+MINE
+{
+	return( uid == $$ );
+}
+
+bad()
+{
+	return( "core" || ("a.out" && mtime <= ago(2*days) ) ||
+		"*.BAK" || "*.CKP" || writable);
+}
+
+csrc()
+{
+	return("*.c" || "*.h" || "[Mm]akefile" );
+}
+
+changed()
+{
+	return( mtime > NOW-1*hours );
+
+	/* ALTERNATELY:
+	 * (using the ago() function)
+	 *
+	 * 	return( mtime > ago(1*hours) );
+	 *
+	 */
+}
+
+KK()
+{
+	return 1024;
+}

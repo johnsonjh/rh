@@ -1,0 +1,10 @@
+# rcsid: $Id: TODO,v 1.2 1994/01/26 01:54:18 rick Exp $
+ino == inode
+
+separate symbol table for parameters?
+
+	b(c) { return c + 2; } a(b) { return b + 2; }
+    parses wrong because b is a function
+
+set static symbols value to instr_value?
+	now->value becomes now->value.date_info.seconds ...

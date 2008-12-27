@@ -1,0 +1,33 @@
+// rcsid: $Id: tests.dat,v 1.1 1994/01/12 19:41:22 rick Exp $
+
+a(b,c) { return 6; }
+
+d() { return a(1 + 2, 3 * 4); }
+
+e() { return "xyz" }
+
+f() { return e; }
+
+g { return e ? 10 : 20 }
+
+h() { return g }
+
+i(j) { return j * h; }
+
+l(m) { return m * d; }
+
+n(o, p) { return p + o }
+
+q { return n(5, 7) }
+
+r(s) { s }
+
+t{ r(33) }	// generates c_param 0 instead of c_number 33
+
+u(v, w) { w }
+
+x() { return u(66, 77); }
+
+y() { x }
+
+// this is a test

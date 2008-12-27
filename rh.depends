@@ -1,0 +1,75 @@
+alloc.o: alloc.c
+alloc.o: errmsg.h
+
+errmsg.o: errmsg.c
+
+getdate.o: getdate.c
+getdate.o: getdate.h
+getdate.o: getdate.y
+
+resname.o: alloc.h
+resname.o: resname.c
+
+rh.o: alloc.h
+rh.o: errmsg.h
+rh.o: getdate.h
+rh.o: rh.c
+rh.o: rh.h
+rh.o: rhcmds.h
+rh.o: rhdata.h
+rh.o: rhgram.h
+
+rhcmds.o: getdate.h
+rhcmds.o: rh.h
+rhcmds.o: rhcmds.c
+rhcmds.o: rhdata.h
+rhcmds.o: sysinfo.h
+
+rhdata.o: getdate.h
+rhdata.o: rh.h
+rhdata.o: rhcmds.h
+rhdata.o: rhdata.c
+rhdata.o: rhgram.h
+
+rhdir.o: errmsg.h
+rhdir.o: getdate.h
+rhdir.o: rh.h
+rhdir.o: rhdata.h
+rhdir.o: rhdir.c
+rhdir.o: sysinfo.h
+
+rhgram.o: alloc.h
+rhgram.o: errmsg.h
+rhgram.o: getdate.h
+rhgram.o: rh.h
+rhgram.o: rhcmds.h
+rhgram.o: rhdata.h
+rhgram.o: rhgram.c
+rhgram.o: rhgram.y
+
+rhlex.o: alloc.h
+rhlex.o: errmsg.h
+rhlex.o: getdate.h
+rhlex.o: rh.h
+rhlex.o: rhdata.h
+rhlex.o: rhgram.h
+rhlex.o: rhlex.c
+rhlex.o: rhlex.l
+rhlex.o: sysinfo.h
+
+strtol.o: strtol.c
+
+strtoul.o: strtoul.c
+
+sysinfo.o: alloc.h
+sysinfo.o: sysinfo.c
+sysinfo.o: sysinfo.h
+
+wildmat.o: wildmat.c
+
+dump.o: dump.c
+dump.o: getdate.h
+dump.o: rh.h
+dump.o: rhcmds.h
+dump.o: rhdata.h
+

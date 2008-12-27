@@ -1,0 +1,38 @@
+// rcsid: $Id: rhrc.2,v 1.1 1994/01/12 19:39:55 rick Exp $
+
+megs { return KK<<10; }
+
+recursion(n)
+{
+	return (n>0) ? recursion(n-1) : 0;
+}
+
+sqrt1(n,odd) { return( (n <= 0 ) ? 0 : sqrt1(n-odd,odd+2)+1 ); }
+sqrt(n) { return( sqrt1(n,1) ); }
+
+fact(n) { return (n<=0) ? 1 : fact(n-1)*n; }
+
+new()
+{
+	return( mtime > NOW-1h || ctime > NOW-1h );
+}
+
+setuid()
+{
+	return( mode & ISUID );
+}
+
+setgid()
+{
+	return( mode & ISGID );
+}
+
+setid()
+{
+	return( mode & ( ISUID | ISGID) );
+}
+
+dump()
+{
+	return ( "xdump" );
+}
