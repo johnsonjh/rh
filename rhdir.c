@@ -13,7 +13,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhdir.c,v 1.2 1994/01/25 22:37:55 rick Exp $";
+static char rcsid[] = "$Id: rhdir.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include <ctype.h>
@@ -595,7 +595,11 @@ static void fwt1(int depth,
     }
     attr.depth++;
     
-    if ((dirp = opendir(attr.fname)) == (DIR *) NULL) {
+    q = attr.fname;
+    if (!*q) {
+	q = ".";
+    }
+    if ((dirp = opendir(q)) == (DIR *) NULL) {
 	warning("%s: %m", attr.fname);
 	return;
     }
