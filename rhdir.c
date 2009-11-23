@@ -13,7 +13,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhdir.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
+static char rcsid[] = "$Id: rhdir.c,v 1.2 2009/10/02 15:28:48 vandys Exp vandys $";
 #endif
 
 #include <ctype.h>
@@ -73,14 +73,13 @@ char *graphic(const char *name)
 {
     static char new_name[MAXPATHLEN + 1];
     
-    char *p = new_name;
+    char c, *p = new_name;
     
-    while (*name != '\0') {
-	if (isascii(*name) && isgraph(*name))
-	    *p++ = *name++;
-	else {
+    while ((c = *name++) != '\0') {
+	if ((c == ' ') || (isascii(c) && isgraph(c))) {
+	    *p++ = c;
+	} else {
 	    *p++ = '?';
-	    name++;
 	}
     }
     *p = '\0';
