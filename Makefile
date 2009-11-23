@@ -1,8 +1,8 @@
-# rcsid: $Id: Makefile,v 1.3 1994/01/26 03:17:29 rick Exp $
+# rcsid: $Id: Makefile,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $
 
 PROGRAM = rh
 
-CFLAGS=-g
+CFLAGS=-O
 CC=gcc
 
 # Possible C preprocessor flags:
