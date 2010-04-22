@@ -12,7 +12,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: errmsg.c,v 1.2 1994/01/26 16:18:48 rick Exp $";
+static char rcsid[] = "$Id: errmsg.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include <stdio.h>
@@ -71,12 +71,12 @@ static void errmsg(const char *format, va_list args)
     if ((m_ptr = percent_m(format)) != NULL) {
 	(void) strncpy(new_format, format, m_ptr - format);
 	nfp = new_format + (m_ptr - format);
-	if (save_errno < sys_nerr) {
-	    for (p = sys_errlist[save_errno]; *p != '\0'; *nfp++ = *p++) {
-		;	/* empty loop */
+	p = strerror(save_errno);
+	if (p) {
+	    while (*p) {
+		*nfp++ = *p++;
 	    }
-	}
-	else {
+	} else {
 	    (void) sprintf(nfp, "Unknown error : %d", save_errno);
 	    nfp += strlen(nfp);
 	}
