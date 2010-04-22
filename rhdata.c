@@ -8,7 +8,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhdata.c,v 1.1 1994/01/12 19:38:27 rick Exp $";
+static char rcsid[] = "$Id: rhdata.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include "rh.h"
@@ -113,6 +113,7 @@ static symbol init_syms[] = {
     { "IXUSR",    NUMBER,      FALSE,  S_IXUSR,           c_number },
     { "atime",    TIME_FIELD,  TRUE,   0,                 c_atime },
     { "baselen",  BLTIN,       FALSE,  0,                 c_baselen },
+    { "blocks",   FIELD,       TRUE,   0,                 c_blksize },
     { "ctime",    TIME_FIELD,  TRUE,   0,                 c_ctime },
     { "days",     NUMBER,      FALSE,  24 * 60 * 60,      c_number },
     { "depth",    BLTIN,       FALSE,  0,                 c_depth },

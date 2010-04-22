@@ -3,7 +3,7 @@
  *
  * Written by:	Rick Ohnemus	(rick@sterling.com)
  *
- * rcsid: $Id: rhcmds.h,v 1.2 1994/01/25 22:39:30 rick Exp $
+ * rcsid: $Id: rhcmds.h,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $
  */
 
 #if !defined(__RHCMDS_H__)
@@ -66,6 +66,7 @@ extern void c_return(instr_value *);
 extern void c_rshift(instr_value *);
 extern void c_samefs(instr_value *);
 extern void c_size(instr_value *);
+extern void c_blksize(instr_value *);
 extern void c_syscall(instr_value *);
 extern void c_uid(instr_value *);
 extern void c_uniminus(instr_value *);

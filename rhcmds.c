@@ -13,7 +13,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhcmds.c,v 1.2 1994/01/26 01:49:21 rick Exp $";
+static char rcsid[] = "$Id: rhcmds.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include "rh.h"
@@ -329,6 +329,12 @@ void c_nlink(instr_value *v)
 void c_rdev(instr_value *v)
 {
     Stack[SP++] = attr.buf->st_rdev;
+    return;
+}
+
+void c_blksize(instr_value *v)
+{
+    Stack[SP++] = attr.buf->st_blocks;
     return;
 }
 
