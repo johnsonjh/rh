@@ -184,7 +184,15 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k.
+ * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
+ * Ditto for the __ia64__ case accordingly.
+ */
+#define YY_BUF_SIZE 32768
+#else
 #define YY_BUF_SIZE 16384
+#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -650,13 +658,13 @@ int yy_flex_debug = 1;
 
 static yyconst flex_int16_t yy_rule_linenum[70] =
     {   0,
-       80,   90,  102,  148,  158,  160,  162,  164,  166,  178,
-      180,  182,  184,  206,  216,  218,  220,  222,  235,  245,
-      247,  249,  251,  268,  278,  279,  280,  281,  282,  283,
-      284,  285,  286,  287,  288,  289,  290,  291,  292,  293,
-      294,  295,  296,  297,  298,  299,  300,  301,  302,  303,
-      304,  305,  307,  313,  328,  334,  349,  388,  394,  400,
-      405,  411,  426,  434,  436,  442,  460,  466,  468
+       76,   86,   98,  144,  154,  156,  158,  160,  162,  174,
+      176,  178,  180,  202,  212,  214,  216,  218,  231,  241,
+      243,  245,  247,  264,  274,  275,  276,  277,  278,  279,
+      280,  281,  282,  283,  284,  285,  286,  287,  288,  289,
+      290,  291,  292,  293,  294,  295,  296,  297,  298,  299,
+      300,  301,  303,  309,  324,  330,  345,  384,  390,  396,
+      401,  407,  422,  430,  432,  438,  456,  462,  464
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -678,11 +686,7 @@ char *yytext;
  *
  * Written by:	Rick Ohnemus	(rick@sterling.com)
  */
-
-#if !defined(lint)
-static char rcsid[] = "$Id: rhlex.l,v 1.1 1994/01/12 19:39:35 rick Exp $";
-#endif
-
+#define _FILE_OFFSET_BITS 64
 #include <memory.h>
 #include <sys/types.h>
 #include <sys/time.h>
@@ -738,7 +742,7 @@ extern long			strtol();
 
 
 
-#line 742 "<stdout>"
+#line 746 "<stdout>"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -855,7 +859,12 @@ static int input (void );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k */
+#define YY_READ_BUF_SIZE 16384
+#else
 #define YY_READ_BUF_SIZE 8192
+#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -986,7 +995,7 @@ YY_DECL
 	register int yy_act;
     
 /* %% [7.0] user's declarations go here */
-#line 73 "rhlex.l"
+#line 69 "rhlex.l"
 
 
     if (First_line) {
@@ -994,7 +1003,7 @@ YY_DECL
 	First_line = 0;
     }
 
-#line 998 "<stdout>"
+#line 1007 "<stdout>"
 
 	if ( !(yy_init) )
 		{
@@ -1116,7 +1125,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 80 "rhlex.l"
+#line 76 "rhlex.l"
 {
 			    Line = ALLOCATE(yyleng + 1);
 			    (void) strcpy(Line, yytext);
@@ -1130,7 +1139,7 @@ YY_RULE_SETUP
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 90 "rhlex.l"
+#line 86 "rhlex.l"
 {
 			    Line = ALLOCATE(81);
 			    *Line = '\0';
@@ -1142,12 +1151,12 @@ YY_RULE_SETUP
 			}
 	YY_BREAK
 case YY_STATE_EOF(FIRST_LINE):
-#line 100 "rhlex.l"
+#line 96 "rhlex.l"
 { yyterminate(); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 102 "rhlex.l"
+#line 98 "rhlex.l"
 {
 			    int adjustment = 0;
 			    int len;
@@ -1197,11 +1206,11 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 148 "rhlex.l"
+#line 144 "rhlex.l"
 { *Line = '\0'; Line_num++; Line_pos = 0; }
 	YY_BREAK
 case YY_STATE_EOF(NEW_LINE):
-#line 150 "rhlex.l"
+#line 146 "rhlex.l"
 {
 			    if (OldSC == COMMENT) {
 				lex_error(Start_line, Start_line_num,
@@ -1212,29 +1221,29 @@ case YY_STATE_EOF(NEW_LINE):
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 158 "rhlex.l"
+#line 154 "rhlex.l"
 { Line_pos += yyleng; }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 160 "rhlex.l"
+#line 156 "rhlex.l"
 { OldSC = COMMENT; BEGIN(NEW_LINE); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 162 "rhlex.l"
+#line 158 "rhlex.l"
 { Line_pos += yyleng; }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 164 "rhlex.l"
+#line 160 "rhlex.l"
 { OldSC = COMMENT; BEGIN(NEW_LINE); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 166 "rhlex.l"
+#line 162 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    free(Start_line);
@@ -1243,7 +1252,7 @@ YY_RULE_SETUP
 			}
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 173 "rhlex.l"
+#line 169 "rhlex.l"
 {
 			    lex_error(Start_line, Start_line_num,
 				      "unterminated comment");
@@ -1251,22 +1260,22 @@ case YY_STATE_EOF(COMMENT):
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 178 "rhlex.l"
+#line 174 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 180 "rhlex.l"
+#line 176 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 182 "rhlex.l"
+#line 178 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 184 "rhlex.l"
+#line 180 "rhlex.l"
 {
 			    char *date_str;
 
@@ -1292,14 +1301,14 @@ YY_RULE_SETUP
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
-#line 206 "rhlex.l"
+#line 202 "rhlex.l"
 {
 			    lex_error(Line, Line_num,
 				      "unterminated date specification");
 			}
 	YY_BREAK
 case YY_STATE_EOF(DATE_SPEC):
-#line 211 "rhlex.l"
+#line 207 "rhlex.l"
 {
 			    lex_error(Line, Line_num,
 				      "unterminated date specification");
@@ -1307,22 +1316,22 @@ case YY_STATE_EOF(DATE_SPEC):
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 216 "rhlex.l"
+#line 212 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 218 "rhlex.l"
+#line 214 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 220 "rhlex.l"
+#line 216 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 222 "rhlex.l"
+#line 218 "rhlex.l"
 {
 			    if (yyleng == 1) {
 				lex_error(Line, Line_num,
@@ -1339,14 +1348,14 @@ YY_RULE_SETUP
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 235 "rhlex.l"
+#line 231 "rhlex.l"
 {
 			    lex_error(Line, Line_num,
 				      "unterminated file name pattern");
 			}
 	YY_BREAK
 case YY_STATE_EOF(FILE_NAME):
-#line 240 "rhlex.l"
+#line 236 "rhlex.l"
 {
 			    lex_error(Line, Line_num,
 				      "unterminated file name pattern");
@@ -1354,22 +1363,22 @@ case YY_STATE_EOF(FILE_NAME):
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 245 "rhlex.l"
+#line 241 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 247 "rhlex.l"
+#line 243 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 249 "rhlex.l"
+#line 245 "rhlex.l"
 { yymore(); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 251 "rhlex.l"
+#line 247 "rhlex.l"
 {
 			    char *ftspec;
 
@@ -1390,14 +1399,14 @@ YY_RULE_SETUP
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 268 "rhlex.l"
+#line 264 "rhlex.l"
 {
 			    lex_error(Line, Line_num,
 				      "unterminated file time operator");
 			}
 	YY_BREAK
 case YY_STATE_EOF(FILE_TIME):
-#line 273 "rhlex.l"
+#line 269 "rhlex.l"
 {
 			    lex_error(Line, Line_num,
 				      "unterminated file time operator");
@@ -1405,147 +1414,147 @@ case YY_STATE_EOF(FILE_TIME):
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 278 "rhlex.l"
+#line 274 "rhlex.l"
 { Line_pos += yyleng; return '!'; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 279 "rhlex.l"
+#line 275 "rhlex.l"
 { Line_pos += yyleng; return NE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 280 "rhlex.l"
+#line 276 "rhlex.l"
 { Line_pos += yyleng; return '%'; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 281 "rhlex.l"
+#line 277 "rhlex.l"
 { Line_pos += yyleng; return '&'; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 282 "rhlex.l"
+#line 278 "rhlex.l"
 { Line_pos += yyleng; return LOGAND; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 283 "rhlex.l"
+#line 279 "rhlex.l"
 { Line_pos += yyleng; return '('; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 284 "rhlex.l"
+#line 280 "rhlex.l"
 { Line_pos += yyleng; return ')'; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 285 "rhlex.l"
+#line 281 "rhlex.l"
 { Line_pos += yyleng; return '*'; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 286 "rhlex.l"
+#line 282 "rhlex.l"
 { Line_pos += yyleng; return '+'; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 287 "rhlex.l"
+#line 283 "rhlex.l"
 { Line_pos += yyleng; return ','; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 288 "rhlex.l"
+#line 284 "rhlex.l"
 { Line_pos += yyleng; return '-'; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 289 "rhlex.l"
+#line 285 "rhlex.l"
 { Line_pos += yyleng; return '/'; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 290 "rhlex.l"
+#line 286 "rhlex.l"
 { Line_pos += yyleng; return ':'; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 291 "rhlex.l"
+#line 287 "rhlex.l"
 { Line_pos += yyleng; return ';'; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 292 "rhlex.l"
+#line 288 "rhlex.l"
 { Line_pos += yyleng; return '<'; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 293 "rhlex.l"
+#line 289 "rhlex.l"
 { Line_pos += yyleng; return LSHIFT; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 294 "rhlex.l"
+#line 290 "rhlex.l"
 { Line_pos += yyleng; return LE; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 295 "rhlex.l"
+#line 291 "rhlex.l"
 { Line_pos += yyleng; return EQ; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 296 "rhlex.l"
+#line 292 "rhlex.l"
 { Line_pos += yyleng; return '>'; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 297 "rhlex.l"
+#line 293 "rhlex.l"
 { Line_pos += yyleng; return GE; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 298 "rhlex.l"
+#line 294 "rhlex.l"
 { Line_pos += yyleng; return RSHIFT; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 299 "rhlex.l"
+#line 295 "rhlex.l"
 { Line_pos += yyleng; return '?'; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 300 "rhlex.l"
+#line 296 "rhlex.l"
 { Line_pos += yyleng; return '^'; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 301 "rhlex.l"
+#line 297 "rhlex.l"
 { Line_pos += yyleng; return '{'; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 302 "rhlex.l"
+#line 298 "rhlex.l"
 { Line_pos += yyleng; return '|'; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 303 "rhlex.l"
+#line 299 "rhlex.l"
 { Line_pos += yyleng; return LOGOR; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 304 "rhlex.l"
+#line 300 "rhlex.l"
 { Line_pos += yyleng; return '}'; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 305 "rhlex.l"
+#line 301 "rhlex.l"
 { Line_pos += yyleng; return '~'; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 307 "rhlex.l"
+#line 303 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    rh_lval.value = getuid();
@@ -1554,7 +1563,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 313 "rhlex.l"
+#line 309 "rhlex.l"
 {
 			    user_info *uip;
 
@@ -1572,7 +1581,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 328 "rhlex.l"
+#line 324 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    rh_lval.value = getgid();
@@ -1581,7 +1590,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 334 "rhlex.l"
+#line 330 "rhlex.l"
 {
 			    group_info *gip;
 
@@ -1599,7 +1608,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 349 "rhlex.l"
+#line 345 "rhlex.l"
 {
 			    char *end;
 
@@ -1641,7 +1650,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 388 "rhlex.l"
+#line 384 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    rh_lval.value = strtol(yytext, (char **) NULL, 0);
@@ -1650,7 +1659,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 394 "rhlex.l"
+#line 390 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    rh_lval.value = strtol(yytext, (char **) NULL, 0);
@@ -1659,7 +1668,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 400 "rhlex.l"
+#line 396 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    return lookup(yytext);
@@ -1667,7 +1676,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 405 "rhlex.l"
+#line 401 "rhlex.l"
 {
 			    Start_line_pos = Line_pos + 1;
 			    Line_pos += yyleng;
@@ -1676,7 +1685,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 411 "rhlex.l"
+#line 407 "rhlex.l"
 {
 			    char *p;
 
@@ -1694,7 +1703,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 426 "rhlex.l"
+#line 422 "rhlex.l"
 {
 			    Start_line_pos = Line_pos + 1;
 			    Start_line_num = Line_num;
@@ -1705,12 +1714,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 434 "rhlex.l"
+#line 430 "rhlex.l"
 { }	/* simple comment - ignore to end of line */
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 436 "rhlex.l"
+#line 432 "rhlex.l"
 {
 			    Line_pos += yyleng;
 			    rh_lval.str = SAVESTR(yytext);
@@ -1719,7 +1728,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 442 "rhlex.l"
+#line 438 "rhlex.l"
 {			/* ignore white space */
 			    char *p;
 
@@ -1740,7 +1749,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 460 "rhlex.l"
+#line 456 "rhlex.l"
 {
 			    Start_line_pos = Line_pos + 1;
 			    Line_pos += yyleng;
@@ -1750,24 +1759,24 @@ YY_RULE_SETUP
 case 68:
 /* rule 68 can match eol */
 YY_RULE_SETUP
-#line 466 "rhlex.l"
+#line 462 "rhlex.l"
 { OldSC = INITIAL; BEGIN(NEW_LINE); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 468 "rhlex.l"
+#line 464 "rhlex.l"
 { Line_pos += yyleng; return yytext[0]; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 470 "rhlex.l"
+#line 466 "rhlex.l"
 { yyterminate(); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 472 "rhlex.l"
+#line 468 "rhlex.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1771 "<stdout>"
+#line 1780 "<stdout>"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2630,8 +2639,8 @@ YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )
 /* %if-c-only */
 /** Setup the input buffer state to scan the given bytes. The next call to yylex() will
  * scan from a @e copy of @a bytes.
- * @param bytes the byte buffer to scan
- * @param len the number of bytes in the buffer pointed to by @a bytes.
+ * @param yybytes the byte buffer to scan
+ * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.
  * 
  * @return the newly allocated buffer state object.
  */
@@ -2900,7 +2909,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 472 "rhlex.l"
+#line 468 "rhlex.l"
 
 
 

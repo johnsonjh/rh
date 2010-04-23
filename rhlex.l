@@ -7,11 +7,7 @@
  *
  * Written by:	Rick Ohnemus	(rick@sterling.com)
  */
-
-#if !defined(lint)
-static char rcsid[] = "$Id: rhlex.l,v 1.1 1994/01/12 19:39:35 rick Exp $";
-#endif
-
+#define _FILE_OFFSET_BITS 64
 #include <memory.h>
 #include <sys/types.h>
 #include <sys/time.h>

@@ -12,10 +12,7 @@
  *		     push_instr, write_tree, write_functions
  */
 
-#if !defined(lint)
-static char rcsid[] = "$Id: rh.c,v 1.3 1994/01/26 16:18:29 rick Exp $";
-#endif
-
+#define _FILE_OFFSET_BITS 64
 #include "rh.h"
 #include "rhcmds.h"
 #include "rhdata.h"

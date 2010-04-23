@@ -12,10 +12,7 @@
  * Static Functions: fwt1, handle_file, ls_date
  */
 
-#if !defined(lint)
-static char rcsid[] = "$Id: rhdir.c,v 1.2 2009/10/02 15:28:48 vandys Exp vandys $";
-#endif
-
+#define _FILE_OFFSET_BITS 64
 #include <ctype.h>
 #include "rh.h"
 #include "rhdata.h"
@@ -245,7 +242,7 @@ void printformat(struct stat *buf,
 
 #if BSD
 	case 'b':	/* number blocks allocated to file */
-	    (void) printf("%10ld", buf->st_blocks);
+	    (void) printf("%10lld", buf->st_blocks);
 	    break;
 	    
 	case 'B':	/* optimal block size for file system i/o */
@@ -291,7 +288,7 @@ void printformat(struct stat *buf,
 	    break;
 	    
 	case 'i':	/* inode number */
-	    (void) printf("%6lu", buf->st_ino);
+	    (void) printf("%6llu", buf->st_ino);
 	    break;
 	    
 	case 'l':	/* number of links */
@@ -371,7 +368,7 @@ void printformat(struct stat *buf,
 	    break;
 	    
 	case 'z':	/* file size in bytes */
-	    (void) printf("%9ld", buf->st_size);
+	    (void) printf("%9lld", buf->st_size);
 	    break;
 	    
 	default:
@@ -442,7 +439,7 @@ void printentry(int verbose,
 			  attr.graphic ? graphic(name) : name);
 	}
 	else {
-	    (void) printf("%s%s%s%s %s %s %9ld %s %s\n",
+	    (void) printf("%s%s%s%s %s %s %9lld %s %s\n",
 			  ftype[ftype_index(buf->st_mode)],
 			  perm[user_index(buf->st_mode)],
 			  perm[group_index(buf->st_mode)],
@@ -466,7 +463,7 @@ void printentry(int verbose,
 			  attr.graphic ? graphic(name) : name);
 	}
 	else {
-	    (void) printf("%s%s%s%s %9ld %s\n",
+	    (void) printf("%s%s%s%s %9lld %s\n",
 			  ftype[ftype_index(buf->st_mode)],
 			  perm[user_index(buf->st_mode)],
 			  perm[group_index(buf->st_mode)],
