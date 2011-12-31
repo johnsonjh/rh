@@ -39,7 +39,7 @@
 */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: wildmat.c,v 1.1 1994/01/12 19:41:27 rick Exp $";
+static char rcsid[] = "$Id: wildmat.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #define TRUE			1
@@ -95,16 +95,16 @@ static unsigned char charmap[] = {
 **  Match text and p, return TRUE, FALSE, or ABORT.
 */
 static int
-DoMatch(register unsigned char	*text,
-	register unsigned char	*pattern,
+DoMatch(unsigned char	*text,
+	unsigned char	*pattern,
 	int			 igncase)
 {
-    register int		 last;
-    register int 	 	 matched;
-    register int 	 	 reverse;
-    register unsigned char	*tp;
-    register unsigned char	*class_end;
-    register unsigned char	*cmap = charmap;
+    int		 last;
+    int 	 	 matched;
+    int 	 	 reverse;
+    unsigned char	*tp;
+    unsigned char	*class_end;
+    unsigned char	*cmap = charmap;
     
     for ( ; *pattern != '\0'; text++, pattern++) {
 	

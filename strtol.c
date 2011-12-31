@@ -25,7 +25,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Header: /home/rick/work/rh/rh-3.0/t/RCS/strtol.c,v 1.1 1994/01/12 19:40:06 rick Exp $ SPRITE (Berkeley)";
+static char rcsid[] = "$Header: /home/vandys/src/sim/N810/ports/rh-3.0-beta/RCS/strtol.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $ SPRITE (Berkeley)";
 #endif /* not lint */
 
 #include <ctype.h>
@@ -67,7 +67,7 @@ strtol(string, endPtr, base)
 				 * else means decimal.
 				 */
 {
-    register char *p;
+    char *p;
     int result;
     extern unsigned long strtoul(char *, char **, int);
 

@@ -1,8 +1,8 @@
-# rcsid: $Id: Makefile,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $
+# rcsid: $Id: Makefile,v 1.2 2009/11/23 04:04:37 vandys Exp vandys $
 
 PROGRAM = rh
 
-CFLAGS=-O
+CFLAGS=-g
 CC=gcc
 
 # Possible C preprocessor flags:
@@ -66,7 +66,7 @@ OBJS =			\
 all: debug
 
 $(PROGRAM): $(OBJS)
-	$(CC) $(OBJS) -o $(PROGRAM)
+	$(CC) $(CFLAGS) $(OBJS) -o $(PROGRAM)
 
 insight:
 	$(MAKE) DEBUG_YFLAGS=-t DEBUG_LFLAGS=-d		\

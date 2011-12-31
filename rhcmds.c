@@ -13,7 +13,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhcmds.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
+static char rcsid[] = "$Id: rhcmds.c,v 1.2 2010/04/22 03:03:16 vandys Exp vandys $";
 #endif
 
 #include "rh.h"
@@ -380,8 +380,8 @@ void c_prune(instr_value *v)
 
 void c_baselen(instr_value *v)
 {
-    register char *	c;
-    register int	len;
+    char *	c;
+    int	len;
     
     len = 0;
     for (c = attr.fname; *c != '\0'; c++) {
@@ -401,9 +401,9 @@ void c_baselen(instr_value *v)
 
 void c_dirlen(instr_value *v)
 {
-    register char *	c;
-    register char *	slash = (char *) NULL;
-    register int	len;
+    char *	c;
+    char *	slash = (char *) NULL;
+    int	len;
 
     for (c = attr.fname; *c != '\0'; c++) {
 	if (*c == '/') {

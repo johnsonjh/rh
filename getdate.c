@@ -52,7 +52,7 @@ static int yygrowstack(void);
 	/*	@(#)getdate.y	2.13	9/16/86			*/
 
 #if !defined(lint)
-static char rcsid[] = "$Id: getdate.y,v 1.1 1994/01/12 19:35:54 rick Exp $";
+static char rcsid[] = "$Id: getdate.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include <stdio.h>
@@ -308,7 +308,7 @@ dateconv(mm, dd, yy, h, m, s, mer, zone, dayflag)
 int mm, dd, yy, h, m, s, mer, zone, dayflag;
 {
 	time_t tod, jdate;
-	register int i;
+	int i;
 
 	if (yy < 0) yy = -yy;
 	if (yy < 100) yy += 1900;
@@ -336,7 +336,7 @@ static time_t
 dayconv(ord, day, now)
 int ord, day; time_t now;
 {
-	register struct tm *loctime;
+	struct tm *loctime;
 	time_t tod;
 
 	tod = now;
@@ -348,7 +348,7 @@ int ord, day; time_t now;
 
 static time_t
 timeconv(hh, mm, ss, mer)
-register int hh, mm, ss, mer;
+int hh, mm, ss, mer;
 {
 	if (mm < 0 || mm > 59 || ss < 0 || ss > 59) return (-1);
 	switch (mer) {
@@ -395,8 +395,8 @@ static int gd_lex()
 {
 	extern int gd_lval;
 	int sign;
-	register char c;
-	register char *p;
+	char c;
+	char *p;
 	char idbuf[20];
 	int pcnt;
 
@@ -617,8 +617,8 @@ char *id;
 #define getid for(j = idvar, k = id; (*j++ = *k++) != '\0'; /* void */)
 
 	char idvar[20];
-	register char *j, *k;
-	register struct table *i;
+	char *j, *k;
+	struct table *i;
 	int abbrev;
 
 	getid;
@@ -800,9 +800,9 @@ static int yygrowstack(void)
 int
 yyparse(void)
 {
-    register int yym, yyn, yystate;
+    int yym, yyn, yystate;
 #if YYDEBUG
-    register const char *yys;
+    const char *yys;
 
     if ((yys = getenv("YYDEBUG")) != 0)
     {
