@@ -11,8 +11,6 @@
  *
  * Static Functions: fwt1, handle_file, ls_date
  */
-
-#define _FILE_OFFSET_BITS 64
 #include <ctype.h>
 #include "rh.h"
 #include "rhdata.h"
@@ -830,17 +828,14 @@ static void fwt1(int depth,
  *	fwt1().
  */
 
-void ftrw(char *file,
+static void _ftrw(char *file,
 	  void (*fn)(),
 	  int depth,
 	  int dashr,
 	  int samefsPC)
 {
-    char	filebuf[MAXPATHLEN + 1];
-    char *	name_end;
-    struct stat	statbuf;
-    
-    
+    char *name_end;
+
 #if defined(DEBUG)
     if (Trace) {
 	(void) fprintf(stderr, "ftrw(\"%s\")\n", file);
@@ -850,8 +845,7 @@ void ftrw(char *file,
     attr.prune = FALSE;
     attr.depth = 0;
     attr.func = fn;
-    name_end = attr.fname = filebuf;
-    attr.buf = &statbuf;
+    name_end = attr.fname;
 
     if (*file == '\0') {
 	*name_end = '\0';
@@ -891,4 +885,28 @@ void ftrw(char *file,
     }
     
     return;
+}
+
+/*
+ * ftrw()
+ *	Wrapper around _ftrw(), above
+ *
+ * Allocate dynamic name/stat storage, free after processing
+ */
+void ftrw(char *file,
+	  void (*fn)(),
+	  int depth,
+	  int dashr,
+	  int samefsPC)
+{
+    char *filebuf;
+    struct stat	*statbuf;
+
+    attr.fname = filebuf = malloc(MAXPATHLEN + 1);
+    attr.buf = statbuf = malloc(sizeof(struct stat));
+    _ftrw(file, fn, depth, dashr, samefsPC);
+    free(statbuf);
+    free(filebuf);
+    attr.fname = 0;
+    attr.buf = 0;
 }

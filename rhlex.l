@@ -7,7 +7,6 @@
  *
  * Written by:	Rick Ohnemus	(rick@sterling.com)
  */
-#define _FILE_OFFSET_BITS 64
 #include <memory.h>
 #include <sys/types.h>
 #include <sys/time.h>

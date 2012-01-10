@@ -1,4 +1,4 @@
-# rcsid: $Id: Makefile,v 1.2 2009/11/23 04:04:37 vandys Exp vandys $
+# rcsid: $Id: Makefile,v 1.3 2011/12/31 02:41:07 vandys Exp vandys $
 
 PROGRAM = rh
 
@@ -14,7 +14,7 @@ CC=gcc
 # directory handling will be used.
 #
 
-CPPFLAGS= -DBSD -DSUNOS_4 $(DEBUG_CPPFLAGS)
+CPPFLAGS= -DBSD -D_FILE_OFFSET_BITS=64 -DSUNOS_4 $(DEBUG_CPPFLAGS)
 CPP=gcc -E
 
 YACC=byacc

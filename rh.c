@@ -11,8 +11,6 @@
  *		     exam3, exam4, get_rhpath, get_func,
  *		     push_instr, write_tree, write_functions
  */
-
-#define _FILE_OFFSET_BITS 64
 #include "rh.h"
 #include "rhcmds.h"
 #include "rhdata.h"
@@ -733,7 +731,8 @@ static void write_functions(void)
  *	Perform the recursive hunt on remaining arguments.
  */
 
-void main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
     extern int		getopt();
     extern char *	optarg;
@@ -1204,4 +1203,5 @@ void main(int argc, char *argv[])
 
     exit((attr.num_errors == 0) ? 0 : 1);
     /*NOTREACHED*/
+    return(1);
 }
