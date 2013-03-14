@@ -8,7 +8,7 @@
 	/*	@(#)getdate.y	2.13	9/16/86			*/
 
 #if !defined(lint)
-static char rcsid[] = "$Id: getdate.y,v 1.1 1994/01/12 19:35:54 rick Exp $";
+static char rcsid[] = "$Id: getdate.y,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include <stdio.h>
@@ -150,11 +150,13 @@ int mm, dd, yy, h, m, s, mer, zone, dayflag;
 	register int i;
 
 	if (yy < 0) yy = -yy;
-	if (yy < 100) yy += 1900;
+	if (yy < 200) yy += 1900;
 	mdays[1] =
 	    28 + ((yy % 4 == 0 && (yy % 100 != 0 || yy % 400 == 0)) ? 1 : 0);
-	if (yy < epoch || yy > 1999 || mm < 1 || mm > 12 ||
-		dd < 1 || dd > mdays[--mm]) return (-1);
+	if ((yy < epoch) || (yy > 2099) || (mm < 1) || (mm > 12) ||
+		(dd < 1) || (dd > mdays[--mm])) {
+	    return (-1);
+	}
 	jdate = dd-1;
         for (i=0; i<mm; i++) jdate += mdays[i];
 	for (i = epoch; i < yy; i++) {

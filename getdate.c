@@ -2,47 +2,100 @@
 static const char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #endif
 
-#include <stdlib.h>
-#include <string.h>
-
 #define YYBYACC 1
 #define YYMAJOR 1
 #define YYMINOR 9
-#define YYPATCH 20070509
+#define YYPATCH 20100610
 
-#define YYEMPTY (-1)
-#define yyclearin    (yychar = YYEMPTY)
-#define yyerrok      (yyerrflag = 0)
-#define YYRECOVERING (yyerrflag != 0)
+#define YYEMPTY        (-1)
+#define yyclearin      (yychar = YYEMPTY)
+#define yyerrok        (yyerrflag = 0)
+#define YYRECOVERING() (yyerrflag != 0)
 
-extern int yyparse(void);
 
-static int yygrowstack(void);
-#define yyparse gd_parse
-#define yylex gd_lex
-#define yyerror gd_error
-#define yychar gd_char
-#define yyval gd_val
-#define yylval gd_lval
-#define yydebug gd_debug
-#define yynerrs gd_nerrs
-#define yyerrflag gd_errflag
-#define yyss gd_ss
-#define yyssp gd_ssp
-#define yyvs gd_vs
-#define yyvsp gd_vsp
-#define yylhs gd_lhs
-#define yylen gd_len
-#define yydefred gd_defred
-#define yydgoto gd_dgoto
-#define yysindex gd_sindex
-#define yyrindex gd_rindex
-#define yygindex gd_gindex
-#define yytable gd_table
-#define yycheck gd_check
-#define yyname gd_name
-#define yyrule gd_rule
+#ifndef yyparse
+#define yyparse    gd_parse
+#endif /* yyparse */
+
+#ifndef yylex
+#define yylex      gd_lex
+#endif /* yylex */
+
+#ifndef yyerror
+#define yyerror    gd_error
+#endif /* yyerror */
+
+#ifndef yychar
+#define yychar     gd_char
+#endif /* yychar */
+
+#ifndef yyval
+#define yyval      gd_val
+#endif /* yyval */
+
+#ifndef yylval
+#define yylval     gd_lval
+#endif /* yylval */
+
+#ifndef yydebug
+#define yydebug    gd_debug
+#endif /* yydebug */
+
+#ifndef yynerrs
+#define yynerrs    gd_nerrs
+#endif /* yynerrs */
+
+#ifndef yyerrflag
+#define yyerrflag  gd_errflag
+#endif /* yyerrflag */
+
+#ifndef yylhs
+#define yylhs      gd_lhs
+#endif /* yylhs */
+
+#ifndef yylen
+#define yylen      gd_len
+#endif /* yylen */
+
+#ifndef yydefred
+#define yydefred   gd_defred
+#endif /* yydefred */
+
+#ifndef yydgoto
+#define yydgoto    gd_dgoto
+#endif /* yydgoto */
+
+#ifndef yysindex
+#define yysindex   gd_sindex
+#endif /* yysindex */
+
+#ifndef yyrindex
+#define yyrindex   gd_rindex
+#endif /* yyrindex */
+
+#ifndef yygindex
+#define yygindex   gd_gindex
+#endif /* yygindex */
+
+#ifndef yytable
+#define yytable    gd_table
+#endif /* yytable */
+
+#ifndef yycheck
+#define yycheck    gd_check
+#endif /* yycheck */
+
+#ifndef yyname
+#define yyname     gd_name
+#endif /* yyname */
+
+#ifndef yyrule
+#define yyrule     gd_rule
+#endif /* yyrule */
 #define YYPREFIX "gd_"
+
+#define YYPURE 0
+
 #line 3 "getdate.y"
 	/* getdate.y						*/
 	/*							*/
@@ -52,7 +105,7 @@ static int yygrowstack(void);
 	/*	@(#)getdate.y	2.13	9/16/86			*/
 
 #if !defined(lint)
-static char rcsid[] = "$Id: getdate.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
+static char rcsid[] = "$Id: getdate.y,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
 #endif
 
 #include <stdio.h>
@@ -85,7 +138,36 @@ static int ourzone;
 static int gd_lex(), lookup();
 static time_t timeconv(), daylcorr(), dateconv(), daylcorr();
 
-#line 89 "y.tab.c"
+#line 141 "y.tab.c"
+
+#ifndef YYSTYPE
+typedef int YYSTYPE;
+#endif
+
+/* compatibility with bison */
+#ifdef YYPARSE_PARAM
+/* compatibility with FreeBSD */
+# ifdef YYPARSE_PARAM_TYPE
+#  define YYPARSE_DECL() yyparse(YYPARSE_PARAM_TYPE YYPARSE_PARAM)
+# else
+#  define YYPARSE_DECL() yyparse(void *YYPARSE_PARAM)
+# endif
+#else
+# define YYPARSE_DECL() yyparse(void)
+#endif
+
+/* Parameters sent to lex. */
+#ifdef YYLEX_PARAM
+# define YYLEX_DECL() yylex(void *YYLEX_PARAM)
+# define YYLEX yylex(YYLEX_PARAM)
+#else
+# define YYLEX_DECL() yylex(void)
+# define YYLEX yylex()
+#endif
+
+extern int YYPARSE_DECL();
+extern int YYLEX_DECL();
+
 #define ID 257
 #define MONTH 258
 #define DAY 259
@@ -98,44 +180,44 @@ static time_t timeconv(), daylcorr(), dateconv(), daylcorr();
 #define DAYZONE 266
 #define AGO 267
 #define YYERRCODE 256
-short gd_lhs[] = {                                        -1,
+static const short gd_lhs[] = {                          -1,
     0,    0,    1,    1,    1,    1,    1,    1,    7,    2,
     2,    2,    2,    2,    2,    2,    3,    3,    5,    5,
     5,    4,    4,    4,    4,    4,    4,    6,    6,    6,
     6,    6,    6,    6,
 };
-short gd_len[] = {                                         2,
+static const short gd_len[] = {                           2,
     0,    2,    1,    1,    1,    1,    1,    1,    1,    2,
     3,    4,    4,    5,    6,    6,    1,    1,    1,    2,
     2,    3,    5,    2,    4,    2,    3,    2,    2,    2,
     1,    1,    1,    2,
 };
-short gd_defred[] = {                                      1,
+static const short gd_defred[] = {                        1,
     0,    0,    0,    0,   31,   32,   33,   17,   18,    2,
     3,    4,    5,    6,    0,    8,    0,   20,    0,   21,
    10,   28,   29,   30,    0,    0,   34,    0,   27,    0,
     0,   25,   12,   13,    0,    0,    0,   23,   15,   16,
 };
-short gd_dgoto[] = {                                       1,
+static const short gd_dgoto[] = {                         1,
    10,   11,   12,   13,   14,   15,   16,
 };
-short gd_sindex[] = {                                      0,
+static const short gd_sindex[] = {                        0,
  -241, -256,  -38,  -47,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0, -260,    0,  -36,    0, -252,    0,
     0,    0,    0,    0, -249, -248,    0, -247,    0,  -56,
   -32,    0,    0,    0, -245, -235, -257,    0,    0,    0,
 };
-short gd_rindex[] = {                                      0,
+static const short gd_rindex[] = {                        0,
     0,    0,    1,   61,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,   10,    0,   19,    0,   37,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,   46,
    28,    0,    0,    0,    0,    0,   55,    0,    0,    0,
 };
-short gd_gindex[] = {                                      0,
+static const short gd_gindex[] = {                        0,
     0,    0,    0,    0,    0,    0,    0,
 };
 #define YYTABLESIZE 327
-short gd_table[] = {                                      26,
+static const short gd_table[] = {                        26,
    19,   35,   39,   40,   17,   18,   27,   28,   29,    7,
    25,   30,   31,   32,   36,   37,    2,    3,   24,    4,
     5,    6,    7,    8,    9,   38,    0,   22,    0,    0,
@@ -170,7 +252,7 @@ short gd_table[] = {                                      26,
    11,   11,   14,   14,    0,    0,   14,   14,   14,   14,
    14,    9,    0,    0,    0,    9,    9,
 };
-short gd_check[] = {                                      47,
+static const short gd_check[] = {                        47,
     0,   58,  260,  261,  261,   44,  267,   44,  261,    0,
    58,  261,  261,  261,   47,  261,  258,  259,    0,  261,
   262,  263,  264,  265,  266,  261,   -1,    0,   -1,   -1,
@@ -211,7 +293,8 @@ short gd_check[] = {                                      47,
 #endif
 #define YYMAXTOKEN 267
 #if YYDEBUG
-char *gd_name[] = {
+static const char *yyname[] = {
+
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,"','",0,0,"'/'",0,0,0,0,0,0,0,0,0,0,"':'",0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -221,7 +304,7 @@ char *gd_name[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"ID","MONTH","DAY",
 "MERIDIAN","NUMBER","UNIT","MUNIT","SUNIT","ZONE","DAYZONE","AGO",
 };
-char *gd_rule[] = {
+static const char *yyrule[] = {
 "$accept : timedate",
 "timedate :",
 "timedate : timedate item",
@@ -257,15 +340,9 @@ char *gd_rule[] = {
 "rspec : MUNIT",
 "rspec : SUNIT",
 "rspec : rspec AGO",
+
 };
 #endif
-#ifndef YYSTYPE
-typedef int YYSTYPE;
-#endif
-#if YYDEBUG
-#include <stdio.h>
-#endif
-
 /* define the initial stack-sizes */
 #ifdef YYSTACKSIZE
 #undef YYMAXDEPTH
@@ -283,18 +360,22 @@ typedef int YYSTYPE;
 
 int      yydebug;
 int      yynerrs;
+
+typedef struct {
+    unsigned stacksize;
+    short    *s_base;
+    short    *s_mark;
+    short    *s_last;
+    YYSTYPE  *l_base;
+    YYSTYPE  *l_mark;
+} YYSTACKDATA;
 int      yyerrflag;
 int      yychar;
-short   *yyssp;
-YYSTYPE *yyvsp;
 YYSTYPE  yyval;
 YYSTYPE  yylval;
 
 /* variables for the parser stack */
-static short   *yyss;
-static short   *yysslim;
-static YYSTYPE *yyvs;
-static int      yystacksize;
+static YYSTACKDATA yystack;
 #line 138 "getdate.y"
 
 static int mdays[12] =
@@ -308,14 +389,16 @@ dateconv(mm, dd, yy, h, m, s, mer, zone, dayflag)
 int mm, dd, yy, h, m, s, mer, zone, dayflag;
 {
 	time_t tod, jdate;
-	int i;
+	register int i;
 
 	if (yy < 0) yy = -yy;
-	if (yy < 100) yy += 1900;
+	if (yy < 200) yy += 1900;
 	mdays[1] =
 	    28 + ((yy % 4 == 0 && (yy % 100 != 0 || yy % 400 == 0)) ? 1 : 0);
-	if (yy < epoch || yy > 1999 || mm < 1 || mm > 12 ||
-		dd < 1 || dd > mdays[--mm]) return (-1);
+	if ((yy < epoch) || (yy > 2099) || (mm < 1) || (mm > 12) ||
+		(dd < 1) || (dd > mdays[--mm])) {
+	    return (-1);
+	}
 	jdate = dd-1;
         for (i=0; i<mm; i++) jdate += mdays[i];
 	for (i = epoch; i < yy; i++) {
@@ -336,7 +419,7 @@ static time_t
 dayconv(ord, day, now)
 int ord, day; time_t now;
 {
-	struct tm *loctime;
+	register struct tm *loctime;
 	time_t tod;
 
 	tod = now;
@@ -348,7 +431,7 @@ int ord, day; time_t now;
 
 static time_t
 timeconv(hh, mm, ss, mer)
-int hh, mm, ss, mer;
+register int hh, mm, ss, mer;
 {
 	if (mm < 0 || mm > 59 || ss < 0 || ss > 59) return (-1);
 	switch (mer) {
@@ -395,8 +478,8 @@ static int gd_lex()
 {
 	extern int gd_lval;
 	int sign;
-	char c;
-	char *p;
+	register char c;
+	register char *p;
 	char idbuf[20];
 	int pcnt;
 
@@ -617,8 +700,8 @@ char *id;
 #define getid for(j = idvar, k = id; (*j++ = *k++) != '\0'; /* void */)
 
 	char idvar[20];
-	char *j, *k;
-	struct table *i;
+	register char *j, *k;
+	register struct table *i;
 	int abbrev;
 
 	getid;
@@ -756,49 +839,72 @@ void gd_error(char *s)
 {
     return;
 }
-#line 760 "y.tab.c"
+#line 842 "y.tab.c"
+
+#if YYDEBUG
+#include <stdio.h>		/* needed for printf */
+#endif
+
+#include <stdlib.h>	/* needed for malloc, etc */
+#include <string.h>	/* needed for memset */
+
 /* allocate initial stack or double stack size, up to YYMAXDEPTH */
-static int yygrowstack(void)
+static int yygrowstack(YYSTACKDATA *data)
 {
-    int newsize, i;
+    int i;
+    unsigned newsize;
     short *newss;
     YYSTYPE *newvs;
 
-    if ((newsize = yystacksize) == 0)
+    if ((newsize = data->stacksize) == 0)
         newsize = YYINITSTACKSIZE;
     else if (newsize >= YYMAXDEPTH)
         return -1;
     else if ((newsize *= 2) > YYMAXDEPTH)
         newsize = YYMAXDEPTH;
 
-    i = yyssp - yyss;
-    newss = (yyss != 0)
-          ? (short *)realloc(yyss, newsize * sizeof(*newss))
+    i = data->s_mark - data->s_base;
+    newss = (data->s_base != 0)
+          ? (short *)realloc(data->s_base, newsize * sizeof(*newss))
           : (short *)malloc(newsize * sizeof(*newss));
     if (newss == 0)
         return -1;
 
-    yyss  = newss;
-    yyssp = newss + i;
-    newvs = (yyvs != 0)
-          ? (YYSTYPE *)realloc(yyvs, newsize * sizeof(*newvs))
+    data->s_base = newss;
+    data->s_mark = newss + i;
+
+    newvs = (data->l_base != 0)
+          ? (YYSTYPE *)realloc(data->l_base, newsize * sizeof(*newvs))
           : (YYSTYPE *)malloc(newsize * sizeof(*newvs));
     if (newvs == 0)
         return -1;
 
-    yyvs = newvs;
-    yyvsp = newvs + i;
-    yystacksize = newsize;
-    yysslim = yyss + newsize - 1;
+    data->l_base = newvs;
+    data->l_mark = newvs + i;
+
+    data->stacksize = newsize;
+    data->s_last = data->s_base + newsize - 1;
     return 0;
 }
 
-#define YYABORT goto yyabort
+#if YYPURE || defined(YY_NO_LEAKS)
+static void yyfreestack(YYSTACKDATA *data)
+{
+    free(data->s_base);
+    free(data->l_base);
+    memset(data, 0, sizeof(*data));
+}
+#else
+#define yyfreestack(data) /* nothing */
+#endif
+
+#define YYABORT  goto yyabort
 #define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
-#define YYERROR goto yyerrlab
+#define YYERROR  goto yyerrlab
+
 int
-yyparse(void)
+YYPARSE_DECL()
 {
     int yym, yyn, yystate;
 #if YYDEBUG
@@ -815,17 +921,23 @@ yyparse(void)
     yynerrs = 0;
     yyerrflag = 0;
     yychar = YYEMPTY;
+    yystate = 0;
 
-    if (yyss == NULL && yygrowstack()) goto yyoverflow;
-    yyssp = yyss;
-    yyvsp = yyvs;
-    *yyssp = yystate = 0;
+#if YYPURE
+    memset(&yystack, 0, sizeof(yystack));
+#endif
+
+    if (yystack.s_base == NULL && yygrowstack(&yystack)) goto yyoverflow;
+    yystack.s_mark = yystack.s_base;
+    yystack.l_mark = yystack.l_base;
+    yystate = 0;
+    *yystack.s_mark = 0;
 
 yyloop:
     if ((yyn = yydefred[yystate]) != 0) goto yyreduce;
     if (yychar < 0)
     {
-        if ((yychar = yylex()) < 0) yychar = 0;
+        if ((yychar = YYLEX) < 0) yychar = 0;
 #if YYDEBUG
         if (yydebug)
         {
@@ -845,12 +957,13 @@ yyloop:
             printf("%sdebug: state %d, shifting to state %d\n",
                     YYPREFIX, yystate, yytable[yyn]);
 #endif
-        if (yyssp >= yysslim && yygrowstack())
+        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
         {
             goto yyoverflow;
         }
-        *++yyssp = yystate = yytable[yyn];
-        *++yyvsp = yylval;
+        yystate = yytable[yyn];
+        *++yystack.s_mark = yytable[yyn];
+        *++yystack.l_mark = yylval;
         yychar = YYEMPTY;
         if (yyerrflag > 0)  --yyerrflag;
         goto yyloop;
@@ -865,9 +978,7 @@ yyloop:
 
     yyerror("syntax error");
 
-#ifdef lint
     goto yyerrlab;
-#endif
 
 yyerrlab:
     ++yynerrs;
@@ -878,20 +989,21 @@ yyinrecovery:
         yyerrflag = 3;
         for (;;)
         {
-            if ((yyn = yysindex[*yyssp]) && (yyn += YYERRCODE) >= 0 &&
+            if ((yyn = yysindex[*yystack.s_mark]) && (yyn += YYERRCODE) >= 0 &&
                     yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
             {
 #if YYDEBUG
                 if (yydebug)
                     printf("%sdebug: state %d, error recovery shifting\
- to state %d\n", YYPREFIX, *yyssp, yytable[yyn]);
+ to state %d\n", YYPREFIX, *yystack.s_mark, yytable[yyn]);
 #endif
-                if (yyssp >= yysslim && yygrowstack())
+                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
                 {
                     goto yyoverflow;
                 }
-                *++yyssp = yystate = yytable[yyn];
-                *++yyvsp = yylval;
+                yystate = yytable[yyn];
+                *++yystack.s_mark = yytable[yyn];
+                *++yystack.l_mark = yylval;
                 goto yyloop;
             }
             else
@@ -899,11 +1011,11 @@ yyinrecovery:
 #if YYDEBUG
                 if (yydebug)
                     printf("%sdebug: error recovery discarding state %d\n",
-                            YYPREFIX, *yyssp);
+                            YYPREFIX, *yystack.s_mark);
 #endif
-                if (yyssp <= yyss) goto yyabort;
-                --yyssp;
-                --yyvsp;
+                if (yystack.s_mark <= yystack.s_base) goto yyabort;
+                --yystack.s_mark;
+                --yystack.l_mark;
             }
         }
     }
@@ -932,7 +1044,7 @@ yyreduce:
 #endif
     yym = yylen[yyn];
     if (yym)
-        yyval = yyvsp[1-yym];
+        yyval = yystack.l_mark[1-yym];
     else
         memset(&yyval, 0, sizeof yyval);
     switch (yyn)
@@ -965,75 +1077,75 @@ break;
 case 9:
 #line 62 "getdate.y"
 
-		{if (timeflag && dateflag && !relflag) year = yyvsp[0];
-		else {timeflag++;hh = yyvsp[0]/100;mm = yyvsp[0]%100;ss = 0;merid = 24;}}
+		{if (timeflag && dateflag && !relflag) year = yystack.l_mark[0];
+		else {timeflag++;hh = yystack.l_mark[0]/100;mm = yystack.l_mark[0]%100;ss = 0;merid = 24;}}
 break;
 case 10:
 #line 66 "getdate.y"
 
-		{hh = yyvsp[-1]; mm = 0; ss = 0; merid = yyvsp[0];}
+		{hh = yystack.l_mark[-1]; mm = 0; ss = 0; merid = yystack.l_mark[0];}
 break;
 case 11:
 #line 68 "getdate.y"
 
-		{hh = yyvsp[-2]; mm = yyvsp[0]; merid = 24;}
+		{hh = yystack.l_mark[-2]; mm = yystack.l_mark[0]; merid = 24;}
 break;
 case 12:
 #line 70 "getdate.y"
 
-		{hh = yyvsp[-3]; mm = yyvsp[-1]; merid = yyvsp[0];}
+		{hh = yystack.l_mark[-3]; mm = yystack.l_mark[-1]; merid = yystack.l_mark[0];}
 break;
 case 13:
 #line 72 "getdate.y"
 
-		{hh = yyvsp[-3]; mm = yyvsp[-1]; merid = 24;
-		dylight = STANDARD; ourzone = yyvsp[0]%100 + 60*yyvsp[0]/100;}
+		{hh = yystack.l_mark[-3]; mm = yystack.l_mark[-1]; merid = 24;
+		dylight = STANDARD; ourzone = yystack.l_mark[0]%100 + 60*yystack.l_mark[0]/100;}
 break;
 case 14:
 #line 75 "getdate.y"
 
-		{hh = yyvsp[-4]; mm = yyvsp[-2]; ss = yyvsp[0]; merid = 24;}
+		{hh = yystack.l_mark[-4]; mm = yystack.l_mark[-2]; ss = yystack.l_mark[0]; merid = 24;}
 break;
 case 15:
 #line 77 "getdate.y"
 
-		{hh = yyvsp[-5]; mm = yyvsp[-3]; ss = yyvsp[-1]; merid = yyvsp[0];}
+		{hh = yystack.l_mark[-5]; mm = yystack.l_mark[-3]; ss = yystack.l_mark[-1]; merid = yystack.l_mark[0];}
 break;
 case 16:
 #line 79 "getdate.y"
 
-		{hh = yyvsp[-5]; mm = yyvsp[-3]; ss = yyvsp[-1]; merid = 24;
-		dylight = STANDARD; ourzone = yyvsp[0]%100 + 60*yyvsp[0]/100;}
+		{hh = yystack.l_mark[-5]; mm = yystack.l_mark[-3]; ss = yystack.l_mark[-1]; merid = 24;
+		dylight = STANDARD; ourzone = yystack.l_mark[0]%100 + 60*yystack.l_mark[0]/100;}
 break;
 case 17:
 #line 83 "getdate.y"
 
-		{ourzone = yyvsp[0]; dylight = STANDARD;}
+		{ourzone = yystack.l_mark[0]; dylight = STANDARD;}
 break;
 case 18:
 #line 85 "getdate.y"
 
-		{ourzone = yyvsp[0]; dylight = DAYLIGHT;}
+		{ourzone = yystack.l_mark[0]; dylight = DAYLIGHT;}
 break;
 case 19:
 #line 88 "getdate.y"
 
-		{dayord = 1; dayreq = yyvsp[0];}
+		{dayord = 1; dayreq = yystack.l_mark[0];}
 break;
 case 20:
 #line 90 "getdate.y"
 
-		{dayord = 1; dayreq = yyvsp[-1];}
+		{dayord = 1; dayreq = yystack.l_mark[-1];}
 break;
 case 21:
 #line 92 "getdate.y"
 
-		{dayord = yyvsp[-1]; dayreq = yyvsp[0];}
+		{dayord = yystack.l_mark[-1]; dayreq = yystack.l_mark[0];}
 break;
 case 22:
 #line 95 "getdate.y"
 
-		{month = yyvsp[-2]; day = yyvsp[0];}
+		{month = yystack.l_mark[-2]; day = yystack.l_mark[0];}
 break;
 case 23:
 #line 97 "getdate.y"
@@ -1046,58 +1158,58 @@ case 23:
 		     * parsed. This was only done for backwards
 		     * compatibility in rh.
 		     */
-		    if (yyvsp[-4] > 1000) {
-			year = yyvsp[-4]; month = yyvsp[-2]; day = yyvsp[0];
+		    if (yystack.l_mark[-4] > 1000) {
+			year = yystack.l_mark[-4]; month = yystack.l_mark[-2]; day = yystack.l_mark[0];
 		    }
 		    else {
-			month = yyvsp[-4]; day = yyvsp[-2]; year = yyvsp[0];
+			month = yystack.l_mark[-4]; day = yystack.l_mark[-2]; year = yystack.l_mark[0];
 		    }
 		}
 break;
 case 24:
 #line 113 "getdate.y"
 
-		{month = yyvsp[-1]; day = yyvsp[0];}
+		{month = yystack.l_mark[-1]; day = yystack.l_mark[0];}
 break;
 case 25:
 #line 115 "getdate.y"
 
-		{month = yyvsp[-3]; day = yyvsp[-2]; year = yyvsp[0];}
+		{month = yystack.l_mark[-3]; day = yystack.l_mark[-2]; year = yystack.l_mark[0];}
 break;
 case 26:
 #line 117 "getdate.y"
 
-		{month = yyvsp[0]; day = yyvsp[-1];}
+		{month = yystack.l_mark[0]; day = yystack.l_mark[-1];}
 break;
 case 27:
 #line 119 "getdate.y"
 
-		{month = yyvsp[-1]; day = yyvsp[-2]; year = yyvsp[0];}
+		{month = yystack.l_mark[-1]; day = yystack.l_mark[-2]; year = yystack.l_mark[0];}
 break;
 case 28:
 #line 123 "getdate.y"
 
-		{relsec +=  60L * yyvsp[-1] * yyvsp[0];}
+		{relsec +=  60L * yystack.l_mark[-1] * yystack.l_mark[0];}
 break;
 case 29:
 #line 125 "getdate.y"
 
-		{relmonth += yyvsp[-1] * yyvsp[0];}
+		{relmonth += yystack.l_mark[-1] * yystack.l_mark[0];}
 break;
 case 30:
 #line 127 "getdate.y"
 
-		{relsec += yyvsp[-1];}
+		{relsec += yystack.l_mark[-1];}
 break;
 case 31:
 #line 129 "getdate.y"
 
-		{relsec +=  60L * yyvsp[0];}
+		{relsec +=  60L * yystack.l_mark[0];}
 break;
 case 32:
 #line 131 "getdate.y"
 
-		{relmonth += yyvsp[0];}
+		{relmonth += yystack.l_mark[0];}
 break;
 case 33:
 #line 133 "getdate.y"
@@ -1109,11 +1221,11 @@ case 34:
 
 		{relsec = -relsec; relmonth = -relmonth;}
 break;
-#line 1113 "y.tab.c"
+#line 1224 "y.tab.c"
     }
-    yyssp -= yym;
-    yystate = *yyssp;
-    yyvsp -= yym;
+    yystack.s_mark -= yym;
+    yystate = *yystack.s_mark;
+    yystack.l_mark -= yym;
     yym = yylhs[yyn];
     if (yystate == 0 && yym == 0)
     {
@@ -1123,11 +1235,11 @@ break;
  state %d\n", YYPREFIX, YYFINAL);
 #endif
         yystate = YYFINAL;
-        *++yyssp = YYFINAL;
-        *++yyvsp = yyval;
+        *++yystack.s_mark = YYFINAL;
+        *++yystack.l_mark = yyval;
         if (yychar < 0)
         {
-            if ((yychar = yylex()) < 0) yychar = 0;
+            if ((yychar = YYLEX) < 0) yychar = 0;
 #if YYDEBUG
             if (yydebug)
             {
@@ -1150,22 +1262,24 @@ break;
 #if YYDEBUG
     if (yydebug)
         printf("%sdebug: after reduction, shifting from state %d \
-to state %d\n", YYPREFIX, *yyssp, yystate);
+to state %d\n", YYPREFIX, *yystack.s_mark, yystate);
 #endif
-    if (yyssp >= yysslim && yygrowstack())
+    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
     {
         goto yyoverflow;
     }
-    *++yyssp = yystate;
-    *++yyvsp = yyval;
+    *++yystack.s_mark = (short) yystate;
+    *++yystack.l_mark = yyval;
     goto yyloop;
 
 yyoverflow:
     yyerror("yacc stack overflow");
 
 yyabort:
+    yyfreestack(&yystack);
     return (1);
 
 yyaccept:
+    yyfreestack(&yystack);
     return (0);
 }
