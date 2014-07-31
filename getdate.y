@@ -8,7 +8,7 @@
 	/*	@(#)getdate.y	2.13	9/16/86			*/
 
 #if !defined(lint)
-static char rcsid[] = "$Id: getdate.y,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
+static char rcsid[] = "$Id: getdate.y,v 1.2 2013/03/14 22:40:31 vandys Exp vandys $";
 #endif
 
 #include <stdio.h>
@@ -39,7 +39,7 @@ static int ourzone;
 #define MAYBE    3
 
 static int gd_lex(), lookup();
-static time_t timeconv(), daylcorr(), dateconv(), daylcorr();
+static time_t timeconv(), daylcorr(), dateconv();
 
 %}
 
@@ -144,40 +144,37 @@ extern struct tm *localtime();
 
 static time_t
 dateconv(mm, dd, yy, h, m, s, mer, zone, dayflag)
-int mm, dd, yy, h, m, s, mer, zone, dayflag;
+    int mm, dd, yy, h, m, s, mer, zone, dayflag;
 {
-	time_t tod, jdate;
-	register int i;
+    time_t t;
+    struct tm tm;
 
-	if (yy < 0) yy = -yy;
-	if (yy < 200) yy += 1900;
-	mdays[1] =
-	    28 + ((yy % 4 == 0 && (yy % 100 != 0 || yy % 400 == 0)) ? 1 : 0);
-	if ((yy < epoch) || (yy > 2099) || (mm < 1) || (mm > 12) ||
-		(dd < 1) || (dd > mdays[--mm])) {
-	    return (-1);
-	}
-	jdate = dd-1;
-        for (i=0; i<mm; i++) jdate += mdays[i];
-	for (i = epoch; i < yy; i++) {
-	    jdate += 365 + ((i % 4 == 0 && (i % 100 != 0 || i % 400 == 0)) ? 1 : 0);
-	}
-	jdate *= daysec;
-	jdate += zone * 60L;
-	if ((tod = timeconv(h, m, s, mer)) < 0) return (-1);
-	jdate += tod;
-	if (dayflag == DAYLIGHT
-	    || (dayflag == MAYBE && localtime(&jdate)->tm_isdst)) {
-	    jdate += -1*60*60;
-	}
-	return (jdate);
+    /* Negative year?  WTF? */
+    if (yy < 0) {
+	yy = -yy;
+    }
+
+    /* Initialize exploded time, then fill in */
+    time(&t);
+    tm = *localtime(&t);
+    tm.tm_year = yy;
+    tm.tm_mon = mm-1;
+    tm.tm_mday = dd;
+    tm.tm_hour = h;
+    tm.tm_min = m;
+    tm.tm_sec = s;
+
+    /* Convert */
+    t = mktime(&tm);
+
+    return (t);
 }
 
 static time_t
 dayconv(ord, day, now)
 int ord, day; time_t now;
 {
-	register struct tm *loctime;
+	struct tm *loctime;
 	time_t tod;
 
 	tod = now;
@@ -189,7 +186,7 @@ int ord, day; time_t now;
 
 static time_t
 timeconv(hh, mm, ss, mer)
-register int hh, mm, ss, mer;
+int hh, mm, ss, mer;
 {
 	if (mm < 0 || mm > 59 || ss < 0 || ss > 59) return (-1);
 	switch (mer) {
@@ -236,8 +233,8 @@ static int gd_lex()
 {
 	extern int gd_lval;
 	int sign;
-	register char c;
-	register char *p;
+	char c;
+	char *p;
 	char idbuf[20];
 	int pcnt;
 
@@ -458,8 +455,8 @@ char *id;
 #define getid for(j = idvar, k = id; (*j++ = *k++) != '\0'; /* void */)
 
 	char idvar[20];
-	register char *j, *k;
-	register struct table *i;
+	char *j, *k;
+	struct table *i;
 	int abbrev;
 
 	getid;
