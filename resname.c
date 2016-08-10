@@ -18,6 +18,7 @@ static char rcsid[] = "$Id: resname.c,v 1.1 2008/12/27 00:56:03 vandys Exp $";
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "alloc.h"
 

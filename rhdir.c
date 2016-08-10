@@ -133,14 +133,13 @@ void printformat(struct stat *buf,
 {
     static char *hex_digits = "0123456789abcdef";
 
-    unsigned char	c;
-    char *		fp;
-    group_info *	gi;
-    int			i;
-    char *		p;
-    user_info *		ui;
-    
-    
+    const char *cp;
+    unsigned char c;
+    char *fp, *p;
+    group_info *gi;
+    int	i;
+    user_info *ui;
+
     for (fp = attr.format; *fp != '\0'; fp++) {
 	if (*fp != '%') {
 	    if (*fp != '\\') {
@@ -334,10 +333,11 @@ void printformat(struct stat *buf,
 	    
 	case 'N':	/* base name of file */
 	case 'S':
-	    if ((p = strrchr(name, '/')) == (char *) NULL)
-		(void) printf(attr.graphic ? graphic(name) : name);
-	    else
-		(void) printf(attr.graphic ? graphic(p + 1) : (p + 1));
+	    cp = strrchr(name, '/');
+	    if (cp == NULL) {
+		cp = name;
+	    }
+	    (void)printf("%s", attr.graphic ? graphic(cp) : cp);
 	    break;
 	    
 	case 'u':	/* numeric user id */

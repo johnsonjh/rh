@@ -1102,7 +1102,7 @@ YY_RULE_SETUP
 			    date_str[yyleng - 1] = '\0';
 			    remove_escapes(date_str);
 			    rh_lval.di = ALLOCATE(sizeof(date_info));
-			    *rh_lval.di = getdate(date_str,
+			    *rh_lval.di = rhgetdate(date_str,
 						  (struct timeb *) NULL);
 			    free(date_str);
 			    if (rh_lval.di->seconds == -1) {

@@ -14,6 +14,7 @@ static char rcsid[] = "$Id: rhdata.c,v 1.2 2010/04/22 03:03:16 vandys Exp $";
 #include "rh.h"
 #include "rhcmds.h"
 #include "rhgram.h"
+#include "errmsg.h"
 
 #if !defined(S_IREAD)
 #  define S_IREAD	0400

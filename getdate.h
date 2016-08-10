@@ -3,7 +3,7 @@
  *
  * Written by:	Rick Ohnemus	(rick@sterling.com)
  *
- * This file contains the structure returned by getdate().
+ * This file contains the structure returned by rhgetdate().
  *
  * rcsid: $Id: getdate.h,v 1.1 2008/12/27 00:56:03 vandys Exp $
  */
@@ -31,6 +31,6 @@ typedef struct {
 
 } date_info;
 
-extern date_info getdate();
+extern date_info rhgetdate();
 
 #endif	/* __GETDATE_H__ */

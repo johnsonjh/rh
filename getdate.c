@@ -753,7 +753,7 @@ char *id;
 	return(ID);
 }
 
-date_info getdate(p, now)
+date_info rhgetdate(p, now)
 char *p;
 struct timeb *now;
 {

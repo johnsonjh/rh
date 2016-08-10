@@ -19,6 +19,7 @@ static char rcsid[] = "$Id: rhcmds.c,v 1.3 2011/12/31 02:41:07 vandys Exp $";
 #include "rh.h"
 #include "rhdata.h"
 #include "sysinfo.h"
+#include "errmsg.h"
 
 void c_or(instr_value *v)
 {
