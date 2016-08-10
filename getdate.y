@@ -8,7 +8,7 @@
 	/*	@(#)getdate.y	2.13	9/16/86			*/
 
 #if !defined(lint)
-static char rcsid[] = "$Id: getdate.y,v 1.2 2013/03/14 22:40:31 vandys Exp vandys $";
+static char rcsid[] = "$Id: getdate.y,v 1.3 2014/07/31 21:58:09 vandys Exp $";
 #endif
 
 #include <stdio.h>

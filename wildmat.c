@@ -1,6 +1,6 @@
 /*
 ** wildmat.c
-**  $Revision: 1.1 $
+**  $Revision: 1.2 $
 **
 **  Do shell-style pattern matching for ?, \, [], and * characters.
 **  Might not be robust in face of malformed patterns; e.g., "foo[a-"
@@ -39,7 +39,7 @@
 */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: wildmat.c,v 1.1 2008/12/27 00:56:03 vandys Exp vandys $";
+static char rcsid[] = "$Id: wildmat.c,v 1.2 2011/12/31 02:41:07 vandys Exp $";
 #endif
 
 #define TRUE			1

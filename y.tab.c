@@ -2,47 +2,100 @@
 static const char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #endif
 
-#include <stdlib.h>
-#include <string.h>
-
 #define YYBYACC 1
 #define YYMAJOR 1
 #define YYMINOR 9
-#define YYPATCH 20070509
+#define YYPATCH 20120115
 
-#define YYEMPTY (-1)
-#define yyclearin    (yychar = YYEMPTY)
-#define yyerrok      (yyerrflag = 0)
-#define YYRECOVERING (yyerrflag != 0)
+#define YYEMPTY        (-1)
+#define yyclearin      (yychar = YYEMPTY)
+#define yyerrok        (yyerrflag = 0)
+#define YYRECOVERING() (yyerrflag != 0)
 
-extern int yyparse(void);
 
-static int yygrowstack(void);
-#define yyparse rh_parse
-#define yylex rh_lex
-#define yyerror rh_error
-#define yychar rh_char
-#define yyval rh_val
-#define yylval rh_lval
-#define yydebug rh_debug
-#define yynerrs rh_nerrs
-#define yyerrflag rh_errflag
-#define yyss rh_ss
-#define yyssp rh_ssp
-#define yyvs rh_vs
-#define yyvsp rh_vsp
-#define yylhs rh_lhs
-#define yylen rh_len
-#define yydefred rh_defred
-#define yydgoto rh_dgoto
-#define yysindex rh_sindex
-#define yyrindex rh_rindex
-#define yygindex rh_gindex
-#define yytable rh_table
-#define yycheck rh_check
-#define yyname rh_name
-#define yyrule rh_rule
+#ifndef yyparse
+#define yyparse    rh_parse
+#endif /* yyparse */
+
+#ifndef yylex
+#define yylex      rh_lex
+#endif /* yylex */
+
+#ifndef yyerror
+#define yyerror    rh_error
+#endif /* yyerror */
+
+#ifndef yychar
+#define yychar     rh_char
+#endif /* yychar */
+
+#ifndef yyval
+#define yyval      rh_val
+#endif /* yyval */
+
+#ifndef yylval
+#define yylval     rh_lval
+#endif /* yylval */
+
+#ifndef yydebug
+#define yydebug    rh_debug
+#endif /* yydebug */
+
+#ifndef yynerrs
+#define yynerrs    rh_nerrs
+#endif /* yynerrs */
+
+#ifndef yyerrflag
+#define yyerrflag  rh_errflag
+#endif /* yyerrflag */
+
+#ifndef yylhs
+#define yylhs      rh_lhs
+#endif /* yylhs */
+
+#ifndef yylen
+#define yylen      rh_len
+#endif /* yylen */
+
+#ifndef yydefred
+#define yydefred   rh_defred
+#endif /* yydefred */
+
+#ifndef yydgoto
+#define yydgoto    rh_dgoto
+#endif /* yydgoto */
+
+#ifndef yysindex
+#define yysindex   rh_sindex
+#endif /* yysindex */
+
+#ifndef yyrindex
+#define yyrindex   rh_rindex
+#endif /* yyrindex */
+
+#ifndef yygindex
+#define yygindex   rh_gindex
+#endif /* yygindex */
+
+#ifndef yytable
+#define yytable    rh_table
+#endif /* yytable */
+
+#ifndef yycheck
+#define yycheck    rh_check
+#endif /* yycheck */
+
+#ifndef yyname
+#define yyname     rh_name
+#endif /* yyname */
+
+#ifndef yyrule
+#define yyrule     rh_rule
+#endif /* yyrule */
 #define YYPREFIX "rh_"
+
+#define YYPURE 0
+
 #line 2 "rhgram.y"
 
 /*
@@ -52,7 +105,7 @@ static int yygrowstack(void);
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhgram.c,v 1.1 2008/12/27 00:56:03 vandys Exp $";
+static char rcsid[] = "$Id: rhgram.y,v 1.1 2008/12/27 00:56:03 vandys Exp $";
 #endif
 
 #include "rh.h"
@@ -76,6 +129,12 @@ extern void	rh_lex_finish(void);	/* lexer clean-up */
 static instr_value	value;
 
 #line 35 "rhgram.y"
+#ifdef YYSTYPE
+#undef  YYSTYPE_IS_DECLARED
+#define YYSTYPE_IS_DECLARED 1
+#endif
+#ifndef YYSTYPE_IS_DECLARED
+#define YYSTYPE_IS_DECLARED 1
 typedef union {
     char *              str;
     symbol *		sym;
@@ -89,7 +148,40 @@ typedef union {
 	int	line_pos;
     } line_info;
 } YYSTYPE;
-#line 93 "y.tab.c"
+#endif /* !YYSTYPE_IS_DECLARED */
+#line 152 "y.tab.c"
+
+/* compatibility with bison */
+#ifdef YYPARSE_PARAM
+/* compatibility with FreeBSD */
+# ifdef YYPARSE_PARAM_TYPE
+#  define YYPARSE_DECL() yyparse(YYPARSE_PARAM_TYPE YYPARSE_PARAM)
+# else
+#  define YYPARSE_DECL() yyparse(void *YYPARSE_PARAM)
+# endif
+#else
+# define YYPARSE_DECL() yyparse(void)
+#endif
+
+/* Parameters sent to lex. */
+#ifdef YYLEX_PARAM
+# define YYLEX_DECL() yylex(void *YYLEX_PARAM)
+# define YYLEX yylex(YYLEX_PARAM)
+#else
+# define YYLEX_DECL() yylex(void)
+# define YYLEX yylex()
+#endif
+
+/* Parameters sent to yyerror. */
+#ifndef YYERROR_DECL
+#define YYERROR_DECL() yyerror(const char *s)
+#endif
+#ifndef YYERROR_CALL
+#define YYERROR_CALL(msg) yyerror(msg)
+#endif
+
+extern int YYPARSE_DECL();
+
 #define BLTIN 257
 #define DATESPEC 258
 #define EQ 259
@@ -113,7 +205,7 @@ typedef union {
 #define TIME_FIELD 277
 #define UNIMINUS 278
 #define YYERRCODE 256
-short rh_lhs[] = {                                        -1,
+static const short rh_lhs[] = {                          -1,
     0,    0,    0,    7,    7,    9,    8,   10,   11,    8,
     8,    5,    5,    5,    5,    4,    4,   12,   12,    1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -122,7 +214,7 @@ short rh_lhs[] = {                                        -1,
     3,    3,    3,    3,    3,    3,    3,    6,    6,    2,
     2,    2,
 };
-short rh_len[] = {                                         2,
+static const short rh_len[] = {                           2,
     1,    2,    3,    0,    2,    0,    3,    0,    0,    7,
     1,    0,    1,    3,    1,    5,    4,    0,    1,    1,
     5,    3,    3,    3,    3,    3,    3,    3,    3,    3,
@@ -131,7 +223,7 @@ short rh_len[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    0,    3,    0,
     1,    3,
 };
-short rh_defred[] = {                                      4,
+static const short rh_defred[] = {                        4,
     0,    0,   11,   51,   55,   52,   49,   56,   50,   43,
     0,   48,   53,   45,   57,    0,    0,    0,    0,    0,
    20,    5,    0,    0,    0,    0,   54,   42,   41,   40,
@@ -143,11 +235,11 @@ short rh_defred[] = {                                      4,
     0,   15,   13,    0,    0,   59,    0,    0,    9,    0,
     0,    0,    0,   17,    0,   14,   16,   10,
 };
-short rh_dgoto[] = {                                       1,
+static const short rh_dgoto[] = {                         1,
    20,   79,   21,   55,   84,   53,    2,   22,   24,   25,
    95,   81,   23,   26,
 };
-short rh_sindex[] = {                                      0,
+static const short rh_sindex[] = {                        0,
     0,  -21,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,  312,  312,  312,  312,  648,
     0,    0,  -38, -116,  -29,  -38,    0,    0,    0,    0,
@@ -159,7 +251,7 @@ short rh_sindex[] = {                                      0,
   312,    0,    0,  -14,  312,    0,  312,  458,    0, -249,
   720,  720, -107,    0, -116,    0,    0,    0,
 };
-short rh_rindex[] = {                                      0,
+static const short rh_rindex[] = {                        0,
     0,   22,    0,    0,    0,    0,    0,    0,    0,    0,
    28,    0,    0,    0,    0,    0,    0,    0,    0,   47,
     0,    0,    1,    0,    0,    1,    0,    0,    0,    0,
@@ -171,12 +263,12 @@ short rh_rindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
   360,   -4,    0,    0,    0,    0,    0,    0,
 };
-short rh_gindex[] = {                                      0,
+static const short rh_gindex[] = {                        0,
  1058,    0,    0,  -46,    0,   24,    0,    0,    0,    0,
     0,    0,    0,    0,
 };
 #define YYTABLESIZE 1145
-short rh_table[] = {                                      50,
+static const short rh_table[] = {                        50,
    58,   52,   82,   50,   48,   46,   54,   47,   48,   49,
    56,   17,   83,   49,   50,   80,   96,   97,   19,   48,
    46,    1,   47,   16,   49,   86,   89,   54,   87,   90,
@@ -293,7 +385,7 @@ short rh_table[] = {                                      50,
     0,    0,    0,    0,    0,    0,    0,    0,   88,    0,
     0,    0,   91,    0,   92,
 };
-short rh_check[] = {                                      37,
+static const short rh_check[] = {                        37,
     0,   40,  256,   37,   42,   43,  123,   45,   42,   47,
    40,   33,  266,   47,   37,  274,  266,  125,   40,   42,
    43,    0,   45,   45,   47,   41,   41,    0,   44,   44,
@@ -412,11 +504,12 @@ short rh_check[] = {                                      37,
 };
 #define YYFINAL 1
 #ifndef YYDEBUG
-#define YYDEBUG 1
+#define YYDEBUG 0
 #endif
 #define YYMAXTOKEN 278
 #if YYDEBUG
-char *rh_name[] = {
+static const char *yyname[] = {
+
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 "'!'",0,0,0,"'%'","'&'",0,"'('","')'","'*'","'+'","','","'-'",0,"'/'",0,0,0,0,0,
 0,0,0,0,0,"':'","';'","'<'",0,"'>'","'?'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -429,7 +522,7 @@ char *rh_name[] = {
 "LOGAND","LOGOR","LSHIFT","NE","NUMBER","PARAM","RETURN","RSHIFT","SYSTEM_CALL",
 "TIME_FIELD","UNIMINUS",
 };
-char *rh_rule[] = {
+static const char *yyrule[] = {
 "$accept : program",
 "program : functions",
 "program : functions expression",
@@ -493,11 +586,17 @@ char *rh_rule[] = {
 "exprlist :",
 "exprlist : expression",
 "exprlist : exprlist ',' expression",
+
 };
 #endif
-#if YYDEBUG
-#include <stdio.h>
-#endif
+
+int      yydebug;
+int      yynerrs;
+
+int      yyerrflag;
+int      yychar;
+YYSTYPE  yyval;
+YYSTYPE  yylval;
 
 /* define the initial stack-sizes */
 #ifdef YYSTACKSIZE
@@ -514,20 +613,16 @@ char *rh_rule[] = {
 
 #define YYINITSTACKSIZE 500
 
-int      yydebug;
-int      yynerrs;
-int      yyerrflag;
-int      yychar;
-short   *yyssp;
-YYSTYPE *yyvsp;
-YYSTYPE  yyval;
-YYSTYPE  yylval;
-
+typedef struct {
+    unsigned stacksize;
+    short    *s_base;
+    short    *s_mark;
+    short    *s_last;
+    YYSTYPE  *l_base;
+    YYSTYPE  *l_mark;
+} YYSTACKDATA;
 /* variables for the parser stack */
-static short   *yyss;
-static short   *yysslim;
-static YYSTYPE *yyvs;
-static int      yystacksize;
+static YYSTACKDATA yystack;
 #line 726 "rhgram.y"
 
 void rh_error(const char *msg)
@@ -667,53 +762,72 @@ static int pattern(const char *p)
     }
     return 0;
 }
-#line 671 "y.tab.c"
+#line 765 "y.tab.c"
+
+#if YYDEBUG
+#include <stdio.h>		/* needed for printf */
+#endif
+
+#include <stdlib.h>	/* needed for malloc, etc */
+#include <string.h>	/* needed for memset */
+
 /* allocate initial stack or double stack size, up to YYMAXDEPTH */
-static int yygrowstack(void)
+static int yygrowstack(YYSTACKDATA *data)
 {
-    int newsize, i;
+    int i;
+    unsigned newsize;
     short *newss;
     YYSTYPE *newvs;
 
-    if ((newsize = yystacksize) == 0)
+    if ((newsize = data->stacksize) == 0)
         newsize = YYINITSTACKSIZE;
     else if (newsize >= YYMAXDEPTH)
         return -1;
     else if ((newsize *= 2) > YYMAXDEPTH)
         newsize = YYMAXDEPTH;
 
-    i = yyssp - yyss;
-    newss = (yyss != 0)
-          ? (short *)realloc(yyss, newsize * sizeof(*newss))
-          : (short *)malloc(newsize * sizeof(*newss));
+    i = data->s_mark - data->s_base;
+    newss = (short *)realloc(data->s_base, newsize * sizeof(*newss));
     if (newss == 0)
         return -1;
 
-    yyss  = newss;
-    yyssp = newss + i;
-    newvs = (yyvs != 0)
-          ? (YYSTYPE *)realloc(yyvs, newsize * sizeof(*newvs))
-          : (YYSTYPE *)malloc(newsize * sizeof(*newvs));
+    data->s_base = newss;
+    data->s_mark = newss + i;
+
+    newvs = (YYSTYPE *)realloc(data->l_base, newsize * sizeof(*newvs));
     if (newvs == 0)
         return -1;
 
-    yyvs = newvs;
-    yyvsp = newvs + i;
-    yystacksize = newsize;
-    yysslim = yyss + newsize - 1;
+    data->l_base = newvs;
+    data->l_mark = newvs + i;
+
+    data->stacksize = newsize;
+    data->s_last = data->s_base + newsize - 1;
     return 0;
 }
 
-#define YYABORT goto yyabort
+#if YYPURE || defined(YY_NO_LEAKS)
+static void yyfreestack(YYSTACKDATA *data)
+{
+    free(data->s_base);
+    free(data->l_base);
+    memset(data, 0, sizeof(*data));
+}
+#else
+#define yyfreestack(data) /* nothing */
+#endif
+
+#define YYABORT  goto yyabort
 #define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
-#define YYERROR goto yyerrlab
+#define YYERROR  goto yyerrlab
+
 int
-yyparse(void)
+YYPARSE_DECL()
 {
-    register int yym, yyn, yystate;
+    int yym, yyn, yystate;
 #if YYDEBUG
-    register const char *yys;
+    const char *yys;
 
     if ((yys = getenv("YYDEBUG")) != 0)
     {
@@ -726,17 +840,23 @@ yyparse(void)
     yynerrs = 0;
     yyerrflag = 0;
     yychar = YYEMPTY;
+    yystate = 0;
 
-    if (yyss == NULL && yygrowstack()) goto yyoverflow;
-    yyssp = yyss;
-    yyvsp = yyvs;
-    *yyssp = yystate = 0;
+#if YYPURE
+    memset(&yystack, 0, sizeof(yystack));
+#endif
+
+    if (yystack.s_base == NULL && yygrowstack(&yystack)) goto yyoverflow;
+    yystack.s_mark = yystack.s_base;
+    yystack.l_mark = yystack.l_base;
+    yystate = 0;
+    *yystack.s_mark = 0;
 
 yyloop:
     if ((yyn = yydefred[yystate]) != 0) goto yyreduce;
     if (yychar < 0)
     {
-        if ((yychar = yylex()) < 0) yychar = 0;
+        if ((yychar = YYLEX) < 0) yychar = 0;
 #if YYDEBUG
         if (yydebug)
         {
@@ -756,12 +876,13 @@ yyloop:
             printf("%sdebug: state %d, shifting to state %d\n",
                     YYPREFIX, yystate, yytable[yyn]);
 #endif
-        if (yyssp >= yysslim && yygrowstack())
+        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
         {
             goto yyoverflow;
         }
-        *++yyssp = yystate = yytable[yyn];
-        *++yyvsp = yylval;
+        yystate = yytable[yyn];
+        *++yystack.s_mark = yytable[yyn];
+        *++yystack.l_mark = yylval;
         yychar = YYEMPTY;
         if (yyerrflag > 0)  --yyerrflag;
         goto yyloop;
@@ -776,9 +897,7 @@ yyloop:
 
     yyerror("syntax error");
 
-#ifdef lint
     goto yyerrlab;
-#endif
 
 yyerrlab:
     ++yynerrs;
@@ -789,20 +908,21 @@ yyinrecovery:
         yyerrflag = 3;
         for (;;)
         {
-            if ((yyn = yysindex[*yyssp]) && (yyn += YYERRCODE) >= 0 &&
+            if ((yyn = yysindex[*yystack.s_mark]) && (yyn += YYERRCODE) >= 0 &&
                     yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
             {
 #if YYDEBUG
                 if (yydebug)
                     printf("%sdebug: state %d, error recovery shifting\
- to state %d\n", YYPREFIX, *yyssp, yytable[yyn]);
+ to state %d\n", YYPREFIX, *yystack.s_mark, yytable[yyn]);
 #endif
-                if (yyssp >= yysslim && yygrowstack())
+                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
                 {
                     goto yyoverflow;
                 }
-                *++yyssp = yystate = yytable[yyn];
-                *++yyvsp = yylval;
+                yystate = yytable[yyn];
+                *++yystack.s_mark = yytable[yyn];
+                *++yystack.l_mark = yylval;
                 goto yyloop;
             }
             else
@@ -810,11 +930,11 @@ yyinrecovery:
 #if YYDEBUG
                 if (yydebug)
                     printf("%sdebug: error recovery discarding state %d\n",
-                            YYPREFIX, *yyssp);
+                            YYPREFIX, *yystack.s_mark);
 #endif
-                if (yyssp <= yyss) goto yyabort;
-                --yyssp;
-                --yyvsp;
+                if (yystack.s_mark <= yystack.s_base) goto yyabort;
+                --yystack.s_mark;
+                --yystack.l_mark;
             }
         }
     }
@@ -843,23 +963,23 @@ yyreduce:
 #endif
     yym = yylen[yyn];
     if (yym)
-        yyval = yyvsp[1-yym];
+        yyval = yystack.l_mark[1-yym];
     else
         memset(&yyval, 0, sizeof yyval);
     switch (yyn)
     {
 case 1:
 #line 96 "rhgram.y"
-{
+	{
 			    rh_lex_finish();
 			}
 break;
 case 2:
 #line 100 "rhgram.y"
-{
+	{
 			    rh_lex_finish();
 			    if (Start_expr == (node *) NULL) {
-				Start_expr = yyvsp[0].tree;
+				Start_expr = yystack.l_mark[0].tree;
 			    }
 			    else {
 				error("too many start expressions specified");
@@ -868,10 +988,10 @@ case 2:
 break;
 case 3:
 #line 110 "rhgram.y"
-{
+	{
 			    rh_lex_finish();
 			    if (Start_expr == (node *) NULL) {
-				Start_expr = yyvsp[-1].tree;
+				Start_expr = yystack.l_mark[-1].tree;
 			    }
 			    else {
 				error("too many start expressions specified");
@@ -880,47 +1000,47 @@ case 3:
 break;
 case 6:
 #line 126 "rhgram.y"
-{
-			    yyvsp[0].sym->type = FUNCTION;
-			    yyvsp[0].sym->func = c_func;
-			    yyvsp[0].sym->value = -1;
-			    yyvsp[0].sym->tree = (node *) NULL;
+	{
+			    yystack.l_mark[0].sym->type = FUNCTION;
+			    yystack.l_mark[0].sym->func = c_func;
+			    yystack.l_mark[0].sym->value = -1;
+			    yystack.l_mark[0].sym->tree = (node *) NULL;
 			}
 break;
 case 7:
 #line 133 "rhgram.y"
-{
-			    yyvsp[-2].sym->tree = yyvsp[0].tree;
-			    yyvsp[-2].sym->num_params = 0;
+	{
+			    yystack.l_mark[-2].sym->tree = yystack.l_mark[0].tree;
+			    yystack.l_mark[-2].sym->num_params = 0;
 			}
 break;
 case 8:
 #line 138 "rhgram.y"
-{
-			    yyvsp[0].sym->type = FUNCTION;
-			    yyvsp[0].sym->func = c_func;
-			    yyvsp[0].sym->value = -1;
-			    yyvsp[0].sym->tree = (node *) NULL;
+	{
+			    yystack.l_mark[0].sym->type = FUNCTION;
+			    yystack.l_mark[0].sym->func = c_func;
+			    yystack.l_mark[0].sym->value = -1;
+			    yystack.l_mark[0].sym->tree = (node *) NULL;
 			}
 break;
 case 9:
 #line 145 "rhgram.y"
-{
-			    yyvsp[-4].sym->num_params = yyvsp[-1].value;
+	{
+			    yystack.l_mark[-4].sym->num_params = yystack.l_mark[-1].value;
 			}
 break;
 case 10:
 #line 149 "rhgram.y"
-{
+	{
 			    symbol *sym;
 
-			    yyvsp[-6].sym->tree = yyvsp[0].tree;
+			    yystack.l_mark[-6].sym->tree = yystack.l_mark[0].tree;
 
 			    while (Symbol_table->type == PARAM) {
 				if (Symbol_table->ref_count == 0
 				    && Issue_warnings) {
 				    warning("warning: function '%s' parameter '%s' is not referenced",
-					    yyvsp[-6].sym->name, Symbol_table->name);
+					    yystack.l_mark[-6].sym->name, Symbol_table->name);
 				}
 				sym = Symbol_table;
 				Symbol_table = Symbol_table->next;
@@ -931,538 +1051,538 @@ case 10:
 break;
 case 11:
 #line 167 "rhgram.y"
-{
+	{
 			    rh_error("expected function definition");
 			}
 break;
 case 12:
 #line 173 "rhgram.y"
-{
+	{
 			    yyval.value = 0;
 			}
 break;
 case 13:
 #line 177 "rhgram.y"
-{
-			    yyvsp[0].sym->type = PARAM;
-			    yyvsp[0].sym->func = c_param;
-			    yyvsp[0].sym->value = 0;
-			    yyvsp[0].sym->ref_count = 0;
+	{
+			    yystack.l_mark[0].sym->type = PARAM;
+			    yystack.l_mark[0].sym->func = c_param;
+			    yystack.l_mark[0].sym->value = 0;
+			    yystack.l_mark[0].sym->ref_count = 0;
 			    yyval.value = 1;
 			}
 break;
 case 14:
 #line 185 "rhgram.y"
-{
-			    yyvsp[0].sym->type = PARAM;
-			    yyvsp[0].sym->func = c_param;
-			    yyvsp[0].sym->value = yyvsp[-2].value;
-			    yyvsp[0].sym->ref_count = 0;
-			    yyval.value = yyvsp[-2].value + 1;
+	{
+			    yystack.l_mark[0].sym->type = PARAM;
+			    yystack.l_mark[0].sym->func = c_param;
+			    yystack.l_mark[0].sym->value = yystack.l_mark[-2].value;
+			    yystack.l_mark[0].sym->ref_count = 0;
+			    yyval.value = yystack.l_mark[-2].value + 1;
 			}
 break;
 case 15:
 #line 193 "rhgram.y"
-{
+	{
 			    rh_error("expected identifier");
 			}
 break;
 case 16:
 #line 199 "rhgram.y"
-{ yyval.tree = yyvsp[-2].tree; }
+	{ yyval.tree = yystack.l_mark[-2].tree; }
 break;
 case 17:
 #line 201 "rhgram.y"
-{ yyval.tree = yyvsp[-1].tree; }
+	{ yyval.tree = yystack.l_mark[-1].tree; }
 break;
 case 20:
 #line 209 "rhgram.y"
-{ yyval.tree = yyvsp[0].tree; }
+	{ yyval.tree = yystack.l_mark[0].tree; }
 break;
 case 21:
 #line 211 "rhgram.y"
-{
-			    if (yyvsp[-4].tree->code.func == c_number
-				&& yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-4].tree;
+	{
+			    if (yystack.l_mark[-4].tree->code.func == c_number
+				&& yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-4].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-4].tree->code.value.l ? yyvsp[-2].tree->code.value.l : yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[-2].tree);
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-4].tree->code.value.l ? yystack.l_mark[-2].tree->code.value.l : yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[-2].tree);
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(TERTIARY, &value);
-				yyval.tree->left = yyvsp[-4].tree;
-				yyval.tree->middle = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-4].tree;
+				yyval.tree->middle = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 22:
 #line 230 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l || yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l || yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_or, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 23:
 #line 246 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l && yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l && yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_and, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 24:
 #line 262 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l | yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l | yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_bor, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 25:
 #line 278 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l ^ yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l ^ yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_bxor, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 26:
 #line 294 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l & yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l & yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_band, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 27:
 #line 310 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l == yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l == yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_eq, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 28:
 #line 326 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l != yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l != yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_ne, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 29:
 #line 342 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l < yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l < yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_lt, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 30:
 #line 358 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l > yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l > yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_gt, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 31:
 #line 374 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l <= yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l <= yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_le, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 32:
 #line 390 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l >= yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l >= yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_ge, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 33:
 #line 406 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l >> yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l >> yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_rshift, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 34:
 #line 422 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l << yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l << yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L; 
 				yyval.tree = make_node(c_lshift, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 35:
 #line 438 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l + yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l + yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_plus, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 36:
 #line 454 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l - yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l - yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_minus, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 37:
 #line 470 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l * yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l * yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_mul, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 38:
 #line 486 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l / yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l / yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_div, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 39:
 #line 502 "rhgram.y"
-{
-			    if (yyvsp[-2].tree->code.func == c_number
-				&& yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[-2].tree;
+	{
+			    if (yystack.l_mark[-2].tree->code.func == c_number
+				&& yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[-2].tree;
 				yyval.tree->code.value.l =
-				    yyvsp[-2].tree->code.value.l % yyvsp[0].tree->code.value.l;
-				free((char *) yyvsp[0].tree);
+				    yystack.l_mark[-2].tree->code.value.l % yystack.l_mark[0].tree->code.value.l;
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_mod, &value);
-				yyval.tree->left = yyvsp[-2].tree;
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->left = yystack.l_mark[-2].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 40:
 #line 518 "rhgram.y"
-{
-			    if (yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[0].tree;
+	{
+			    if (yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[0].tree;
 				yyval.tree->code.value.l = ~ yyval.tree->code.value.l;
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_bnot, &value);
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 41:
 #line 530 "rhgram.y"
-{
-			    if (yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[0].tree;
+	{
+			    if (yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[0].tree;
 				yyval.tree->code.value.l = ! yyval.tree->code.value.l;
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_not, &value);
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 42:
 #line 542 "rhgram.y"
-{
-			    if (yyvsp[0].tree->code.func == c_number) {
-				yyval.tree = yyvsp[0].tree;
+	{
+			    if (yystack.l_mark[0].tree->code.func == c_number) {
+				yyval.tree = yystack.l_mark[0].tree;
 				yyval.tree->code.value.l = - yyval.tree->code.value.l;
 			    }
 			    else {
 				value.l = 0L;
 				yyval.tree = make_node(c_uniminus, &value);
-				yyval.tree->right = yyvsp[0].tree;
+				yyval.tree->right = yystack.l_mark[0].tree;
 			    }
 			}
 break;
 case 43:
 #line 556 "rhgram.y"
-{
+	{
 			    yyval.line_info.line = SAVESTR(Line);
 			    yyval.line_info.line_num = Line_num;
-			    yyval.line_info.line_pos = Line_pos - strlen(yyvsp[0].sym->name);
+			    yyval.line_info.line_pos = Line_pos - strlen(yystack.l_mark[0].sym->name);
 			}
 break;
 case 44:
 #line 562 "rhgram.y"
-{
-			    if (yyvsp[-2].sym->num_params != yyvsp[0].tree->count) {
+	{
+			    if (yystack.l_mark[-2].sym->num_params != yystack.l_mark[0].tree->count) {
 				free(Line);
-				Line = yyvsp[-1].line_info.line;
-				Line_num = -(yyvsp[-1].line_info.line_num);
-				Line_pos = yyvsp[-1].line_info.line_pos;
+				Line = yystack.l_mark[-1].line_info.line;
+				Line_num = -(yystack.l_mark[-1].line_info.line_num);
+				Line_pos = yystack.l_mark[-1].line_info.line_pos;
 				rh_error("function called with wrong number of arguments");
 			    }
-			    if (yyvsp[-2].sym->tree != (node *) NULL
-				&& yyvsp[-2].sym->tree->left == (node *) NULL
-				&& yyvsp[-2].sym->tree->right == (node *) NULL) {
+			    if (yystack.l_mark[-2].sym->tree != (node *) NULL
+				&& yystack.l_mark[-2].sym->tree->left == (node *) NULL
+				&& yystack.l_mark[-2].sym->tree->right == (node *) NULL) {
 				int i;
 				
-				if (yyvsp[-2].sym->tree->code.func == c_param) {
-				    for (i = 0; i < yyvsp[0].tree->count; i++) {
-					if (i == yyvsp[-2].sym->tree->code.value.param) {
-					    yyval.tree = yyvsp[0].tree->trees[i];
+				if (yystack.l_mark[-2].sym->tree->code.func == c_param) {
+				    for (i = 0; i < yystack.l_mark[0].tree->count; i++) {
+					if (i == yystack.l_mark[-2].sym->tree->code.value.param) {
+					    yyval.tree = yystack.l_mark[0].tree->trees[i];
 					}
 					else {
-					    free_tree(yyvsp[0].tree->trees[i]);
+					    free_tree(yystack.l_mark[0].tree->trees[i]);
 					}
 				    }
 				}
 				else {
-				    yyval.tree = copy_tree(yyvsp[-2].sym->tree);
-				    for (i = 0; i < yyvsp[0].tree->count; i++) {
-					free_tree(yyvsp[0].tree->trees[i]);
+				    yyval.tree = copy_tree(yystack.l_mark[-2].sym->tree);
+				    for (i = 0; i < yystack.l_mark[0].tree->count; i++) {
+					free_tree(yystack.l_mark[0].tree->trees[i]);
 				    }
 				}
-				if (yyvsp[0].tree->trees != (node **) NULL) {
-				    free((char *) yyvsp[0].tree->trees);
+				if (yystack.l_mark[0].tree->trees != (node **) NULL) {
+				    free((char *) yystack.l_mark[0].tree->trees);
 				}
-				free((char *) yyvsp[0].tree);
+				free((char *) yystack.l_mark[0].tree);
 			    }
 			    else {
-				yyval.tree = yyvsp[0].tree;
+				yyval.tree = yystack.l_mark[0].tree;
 				yyval.tree->code.func = UNRES_FUNC;
-				yyval.tree->code.value.func_name = yyvsp[-2].sym->name;
+				yyval.tree->code.value.func_name = yystack.l_mark[-2].sym->name;
 			    }
-			    free(yyvsp[-1].line_info.line);
+			    free(yystack.l_mark[-1].line_info.line);
 			}
 break;
 case 45:
 #line 604 "rhgram.y"
-{
+	{
 			    yyval.line_info.line = SAVESTR(Line);
 			    yyval.line_info.line_num = Line_num;
-			    yyval.line_info.line_pos = Line_pos - strlen(yyvsp[0].sym->name);
+			    yyval.line_info.line_pos = Line_pos - strlen(yystack.l_mark[0].sym->name);
 			}
 break;
 case 46:
 #line 610 "rhgram.y"
-{
-			    if (yyvsp[-2].sym->num_params != yyvsp[0].tree->count) {
+	{
+			    if (yystack.l_mark[-2].sym->num_params != yystack.l_mark[0].tree->count) {
 				free(Line);
-				Line = yyvsp[-1].line_info.line;
-				Line_num = -(yyvsp[-1].line_info.line_num);
-				Line_pos = yyvsp[-1].line_info.line_pos;
+				Line = yystack.l_mark[-1].line_info.line;
+				Line_num = -(yystack.l_mark[-1].line_info.line_num);
+				Line_pos = yystack.l_mark[-1].line_info.line_pos;
 				rh_error("function called with wrong number of arguments");
 			    }
-			    yyval.tree = yyvsp[0].tree;
+			    yyval.tree = yystack.l_mark[0].tree;
 			    yyval.tree->code.func = c_syscall;
-			    yyval.tree->code.value.sym = yyvsp[-2].sym;
-			    free(yyvsp[-1].line_info.line);
+			    yyval.tree->code.value.sym = yystack.l_mark[-2].sym;
+			    free(yystack.l_mark[-1].line_info.line);
 			}
 break;
 case 47:
 #line 624 "rhgram.y"
-{ yyval.tree = yyvsp[-1].tree; }
+	{ yyval.tree = yystack.l_mark[-1].tree; }
 break;
 case 48:
 #line 626 "rhgram.y"
-{
-			    value.l = yyvsp[0].value;
+	{
+			    value.l = yystack.l_mark[0].value;
 			    yyval.tree = make_node(c_number, &value);
 			}
 break;
 case 49:
 #line 631 "rhgram.y"
-{
-			    if (attr.dot_special && strcmp(yyvsp[0].str, "*") == 0) {
+	{
+			    if (attr.dot_special && strcmp(yystack.l_mark[0].str, "*") == 0) {
 				value.l = 1L;
 				yyval.tree = make_node(c_number, &value);
 			    }
 			    else {
-				value.pattern = yyvsp[0].str;
-				if (pattern(yyvsp[0].str)) {
+				value.pattern = yystack.l_mark[0].str;
+				if (pattern(yystack.l_mark[0].str)) {
 				    yyval.tree = make_node(c_pattern, &value);
 				}
 				else if (attr.ignore_case) {
@@ -1476,61 +1596,61 @@ case 49:
 break;
 case 50:
 #line 650 "rhgram.y"
-{
-			    value.fstype = yyvsp[0].str;
+	{
+			    value.fstype = yystack.l_mark[0].str;
 			    yyval.tree = make_node(c_fstype, &value);
 			}
 break;
 case 51:
 #line 655 "rhgram.y"
-{
-			    value.l = yyvsp[0].sym->value;
-			    yyval.tree = make_node(yyvsp[0].sym->func, &value);
+	{
+			    value.l = yystack.l_mark[0].sym->value;
+			    yyval.tree = make_node(yystack.l_mark[0].sym->func, &value);
 			}
 break;
 case 52:
 #line 660 "rhgram.y"
-{
-			    value.l = yyvsp[0].sym->value;
-			    yyval.tree = make_node(yyvsp[0].sym->func, &value);
+	{
+			    value.l = yystack.l_mark[0].sym->value;
+			    yyval.tree = make_node(yystack.l_mark[0].sym->func, &value);
 			}
 break;
 case 53:
 #line 665 "rhgram.y"
-{
-			    value.param = yyvsp[0].sym->value;
+	{
+			    value.param = yystack.l_mark[0].sym->value;
 			    yyval.tree = make_node(c_param, &value);
-			    yyvsp[0].sym->ref_count++;
+			    yystack.l_mark[0].sym->ref_count++;
 			}
 break;
 case 54:
 #line 671 "rhgram.y"
-{ rh_error("undefined identifier"); }
+	{ rh_error("undefined identifier"); }
 break;
 case 55:
 #line 673 "rhgram.y"
-{
-			    value.di = yyvsp[0].di;
+	{
+			    value.di = yystack.l_mark[0].di;
 			    yyval.tree = make_node(c_date, &value);
 			}
 break;
 case 56:
 #line 678 "rhgram.y"
-{
-			    value.di = yyvsp[0].di;
+	{
+			    value.di = yystack.l_mark[0].di;
 			    yyval.tree = make_node(c_date, &value);
 			}
 break;
 case 57:
 #line 683 "rhgram.y"
-{
-			    value.l = yyvsp[0].sym->value;
-			    yyval.tree = make_node(yyvsp[0].sym->func, &value);
+	{
+			    value.l = yystack.l_mark[0].sym->value;
+			    yyval.tree = make_node(yystack.l_mark[0].sym->func, &value);
 			}
 break;
 case 58:
 #line 690 "rhgram.y"
-{
+	{
 			    value.l = 0L;
 			    yyval.tree = make_node(EXPR_LIST, &value);
 			    yyval.tree->count = 0;
@@ -1539,11 +1659,11 @@ case 58:
 break;
 case 59:
 #line 697 "rhgram.y"
-{ yyval.tree = yyvsp[-1].tree; }
+	{ yyval.tree = yystack.l_mark[-1].tree; }
 break;
 case 60:
 #line 700 "rhgram.y"
-{
+	{
 			    value.l = 0L;
 			    yyval.tree = make_node(EXPR_LIST, &value);
 			    yyval.tree->count = 0;
@@ -1552,30 +1672,30 @@ case 60:
 break;
 case 61:
 #line 707 "rhgram.y"
-{
+	{
 			    value.l = 0L;
 			    yyval.tree = make_node(EXPR_LIST, &value);
 			    yyval.tree->count = 1;
 			    yyval.tree->trees = ALLOCATE(sizeof(node *));
-			    yyval.tree->trees[0] = yyvsp[0].tree;
+			    yyval.tree->trees[0] = yystack.l_mark[0].tree;
 			}
 break;
 case 62:
 #line 715 "rhgram.y"
-{
-			    yyval.tree = yyvsp[-2].tree;
+	{
+			    yyval.tree = yystack.l_mark[-2].tree;
 			    yyval.tree->count++;
 			    yyval.tree->trees =
 				REALLOCATE(yyval.tree->trees,
 					   (sizeof(node *)) * yyval.tree->count);
-			    yyval.tree->trees[yyval.tree->count - 1] = yyvsp[0].tree;
+			    yyval.tree->trees[yyval.tree->count - 1] = yystack.l_mark[0].tree;
 			}
 break;
-#line 1575 "y.tab.c"
+#line 1694 "y.tab.c"
     }
-    yyssp -= yym;
-    yystate = *yyssp;
-    yyvsp -= yym;
+    yystack.s_mark -= yym;
+    yystate = *yystack.s_mark;
+    yystack.l_mark -= yym;
     yym = yylhs[yyn];
     if (yystate == 0 && yym == 0)
     {
@@ -1585,11 +1705,11 @@ break;
  state %d\n", YYPREFIX, YYFINAL);
 #endif
         yystate = YYFINAL;
-        *++yyssp = YYFINAL;
-        *++yyvsp = yyval;
+        *++yystack.s_mark = YYFINAL;
+        *++yystack.l_mark = yyval;
         if (yychar < 0)
         {
-            if ((yychar = yylex()) < 0) yychar = 0;
+            if ((yychar = YYLEX) < 0) yychar = 0;
 #if YYDEBUG
             if (yydebug)
             {
@@ -1612,22 +1732,24 @@ break;
 #if YYDEBUG
     if (yydebug)
         printf("%sdebug: after reduction, shifting from state %d \
-to state %d\n", YYPREFIX, *yyssp, yystate);
+to state %d\n", YYPREFIX, *yystack.s_mark, yystate);
 #endif
-    if (yyssp >= yysslim && yygrowstack())
+    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
     {
         goto yyoverflow;
     }
-    *++yyssp = yystate;
-    *++yyvsp = yyval;
+    *++yystack.s_mark = (short) yystate;
+    *++yystack.l_mark = yyval;
     goto yyloop;
 
 yyoverflow:
     yyerror("yacc stack overflow");
 
 yyabort:
+    yyfreestack(&yystack);
     return (1);
 
 yyaccept:
+    yyfreestack(&yystack);
     return (0);
 }

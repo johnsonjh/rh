@@ -10,7 +10,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: dump.c,v 1.2 1994/01/26 01:46:21 rick Exp $";
+static char rcsid[] = "$Id: dump.c,v 1.1 2008/12/27 00:56:03 vandys Exp $";
 #endif
 
 #include <time.h>

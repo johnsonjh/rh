@@ -3,7 +3,7 @@
  *
  * Written by:	Rick Ohnemus	(rick@sterling.com)
  *
- * rcsid: $Id: rhdata.h,v 1.1 1994/01/12 19:38:51 rick Exp $
+ * rcsid: $Id: rhdata.h,v 1.1 2008/12/27 00:56:03 vandys Exp $
  */
 
 #if !defined(__RHDATA_H__)

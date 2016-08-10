@@ -3,7 +3,7 @@
  *
  * WRITTEN BY:	Rick Ohnemus	(rick@sterling.com)
  *
- * rcsid: $Id: dump.h,v 1.1 1994/01/12 19:34:18 rick Exp $
+ * rcsid: $Id: dump.h,v 1.1 2008/12/27 00:56:03 vandys Exp $
  */
 
 #if !defined(__DUMP_H__)

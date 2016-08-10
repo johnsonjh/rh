@@ -1,8 +1,8 @@
-# rcsid: $Id: Makefile,v 1.3 2011/12/31 02:41:07 vandys Exp vandys $
+# rcsid: $Id: Makefile,v 1.4 2012/01/10 00:03:46 vandys Exp vandys $
 
 PROGRAM = rh
 
-CFLAGS=-g
+CFLAGS=-O
 CC=gcc
 
 # Possible C preprocessor flags:
@@ -94,16 +94,16 @@ debug_p:
 		DEBUG_SRCS=dump.c DEBUG_OBJS=dump.o	\
 		DEBUG_CPPFLAGS="-DDEBUG" purify
 
-rhgram.c rhgram.h: rhgram.y
-	$(YACC) $(DEBUG_YFLAGS) -d -p rh_ rhgram.y
-	mv y.tab.c rhgram.c
-	mv y.tab.h rhgram.h
-	# $(YACC) $(DEBUG_YFLAGS) -d -B -p rh_ rhgram.y
-
-getdate.c: getdate.y
-	$(YACC) $(DEBUG_YFLAGS) -p gd_ getdate.y
-	mv y.tab.c getdate.c
-	# $(YACC) $(DEBUG_YFLAGS) B -p gd_ getdate.y
+# rhgram.c rhgram.h: rhgram.y
+# 	$(YACC) $(DEBUG_YFLAGS) -d -p rh_ rhgram.y
+# 	mv y.tab.c rhgram.c
+# 	mv y.tab.h rhgram.h
+# 	# $(YACC) $(DEBUG_YFLAGS) -d -B -p rh_ rhgram.y
+# 
+# getdate.c: getdate.y
+# 	$(YACC) $(DEBUG_YFLAGS) -p gd_ getdate.y
+# 	mv y.tab.c getdate.c
+# 	# $(YACC) $(DEBUG_YFLAGS) B -p gd_ getdate.y
 
 cc_src: $(SRCS)
 	#load $(CPPFLAGS) $(SRCS)

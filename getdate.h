@@ -5,7 +5,7 @@
  *
  * This file contains the structure returned by getdate().
  *
- * rcsid: $Id: getdate.h,v 1.1 1994/01/12 19:35:41 rick Exp $
+ * rcsid: $Id: getdate.h,v 1.1 2008/12/27 00:56:03 vandys Exp $
  */
 
 #if !defined(__GETDATE_H__)

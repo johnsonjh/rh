@@ -17,7 +17,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: sysinfo.c,v 1.1 1994/01/12 19:40:33 rick Exp $";
+static char rcsid[] = "$Id: sysinfo.c,v 1.1 2008/12/27 00:56:03 vandys Exp $";
 #endif
 
 #include <sys/types.h>

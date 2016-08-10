@@ -7,7 +7,7 @@
  */
 
 #if !defined(lint)
-static char rcsid[] = "$Id: rhgram.y,v 1.3 1994/01/26 16:17:54 rick Exp $";
+static char rcsid[] = "$Id: rhgram.y,v 1.1 2008/12/27 00:56:03 vandys Exp $";
 #endif
 
 #include "rh.h"
