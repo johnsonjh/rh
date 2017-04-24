@@ -253,4 +253,5 @@ struct runtime {
    char			str_owner;	/* print user/group strings instead of numbers */
    char			verbose;	/* used by the (*func)() routine */
    char			full_date;	/* print full date instead of ls(1) type date */
+   char			zero_term;	/* flag separate files by \0 */
 };

@@ -61,25 +61,25 @@ int		Trace = 0;
 #if defined(S_IFLNK)
 
 #if defined(DEBUG)
-#define SWITCHES "CDFLTUVWXYZbcde:f:hilp:qrstvwx:"
+#define SWITCHES "0CDFLTUVWXYZbcde:f:hilp:qrstvwx:"
 #else
-#define SWITCHES "CDFLVbcde:f:hilp:qrstvwx:"
+#define SWITCHES "0CDFLVbcde:f:hilp:qrstvwx:"
 #endif
 
 static char *usage =
-    "Usage: %s [-CDFLVbcdhilqrsvw] [-f filename] [-e expression]\n"
+    "Usage: %s [-0CDFLVbcdhilqrsvw] [-f filename] [-e expression]\n"
     "\t\t[-p format] [-x command] [directory/file ...]\n";
 
 #else
 
 #if defined(DEBUG)
-#define SWITCHES "CTUVWXYZbcde:f:hilp:qrstvwx:"
+#define SWITCHES "0CTUVWXYZbcde:f:hilp:qrstvwx:"
 #else
-#define SWITCHES "CVbcde:f:hilp:qrstvwx:"
+#define SWITCHES "0CVbcde:f:hilp:qrstvwx:"
 #endif
 
 static char *usage = 
-    "Usage: %s [-CVbcdhilqrsvw] [-f filename] [-e expression]\n"
+    "Usage: %s [-0CVbcdhilqrsvw] [-f filename] [-e expression]\n"
     "\t\t[-p format] [-x command] [directory/file ...]\n";
 #endif
 
@@ -129,6 +129,7 @@ static void printhelp(const char *s)
 		   "\t-v\tverbose output\n"
 		   "\t-w\tdisplay warning messages\n"
 		   "\t-x command\texecute 'command' for matching files\n"
+		   "\t-0\tseparate filenames by null char, not newline\n"
 		   "\nvalid symbols:\n"
 		   );
 		   
@@ -397,9 +398,13 @@ static long execute(void)
 static void exam1(void)
 {
     if (execute()) {
-	(void) printf("%s\n", attr.graphic ? graphic(attr.fname) : attr.fname);
+	(void) printf("%s%c",
+	    attr.graphic ? graphic(attr.fname) : attr.fname,
+	    attr.zero_term ? '\0' : '\n');
+	if (attr.zero_term) {
+	    (void)fflush(stdout);
+	}
     }
-    return;
 }
 
 /* long output of file */
@@ -906,6 +911,10 @@ main(int argc, char *argv[])
 	    examptr = exam4;
 	    attr.command = optarg;
 	    break;
+
+	case '0':
+	    attr.zero_term = TRUE;
+	    break;
 	    
 #if defined(DEBUG)
 	case 'T':
@@ -931,6 +940,7 @@ main(int argc, char *argv[])
 	case 'Z':
 	    ++yy_flex_debug;
 	    break;
+
 #endif
 
 	default:
