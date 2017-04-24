@@ -1,0 +1,7 @@
+file() { return ((mode & IFMT) == IFREG); }
+dir() { return ((mode & IFMT) == IFDIR); }
+csrc() { return (file && ("*.[ch]" || "*.[ch]p*")); }
+cppsrc() { return (file && ("*.cpp" || "*.hpp")); }
+obj() { return "*.[oa]"; }
+exec() { return (file() && (mode & 0111)); }
+gosrc() { return "*.go"; }
