@@ -22,7 +22,13 @@
 #define all_index(b)	((000007 & (b)) + (((b) & S_ISVTX) ? 8 : 0))
 #define ftype_index(b)	((b) >> 13)
 
-#define hassubdir(b)	((b)->st_nlink > 2)
+/*
+ * This is pretty questionable; in a traditional filesystem you get
+ *  a link for "." and for "..", thus > 2 means you have other directories
+ *  which link to you.  But in virtual (fuse) filesystems, not so much.
+ *  sshfs seems to just return 1 no matter what.
+ */
+#define hassubdir(b)	((b)->st_nlink != 2)
 
 #define isdot(s)	((s)[1] == '\0' && (s)[0] == '.')
 #define isdotdot(s)	((s)[2] == '\0' && (s)[1] == '.' && (s)[0] == '.')
