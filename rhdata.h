@@ -25,8 +25,8 @@ extern int		PC;
 extern int		startPC;
 
 extern long		Stack[];
-int			SP;
-int			FP;
+extern int		SP;
+extern int		FP;
 
 extern struct runtime	attr;
 
