@@ -1,9 +1,7 @@
-#!/usr/local/bin/perl --
-#
-# rcsid: $Id: makedep,v 1.1 2008/12/27 00:56:28 vandys Exp $
+#!/usr/bin/env perl
 #
 #*********************************************************************#
-#                                                                      
+#
 #  PERL SCRIPT:  makedep
 #  AUTHOR:       Rick Ohnemus
 #  ABSTRACT:
@@ -38,50 +36,52 @@
 # Set default preprocessor.
 
 $Preprocessor = "gcc -E";
+
 #$Preprocessor = "cc -E";
 #$Preprocessor = "/lib/cpp";
 
-$Usage = "Usage: $0 [-acrs] [-e exclusion] [-t strip_string] [-l library] [-m makefile] [-o preprocessor_options] [-p preprocessor] [variable=value ...] file [...]\n";
+$Usage =
+"Usage: $0 [-acrs] [-e exclusion] [-t strip_string] [-l library]\n            [-m makefile] [-o preprocessor_options] [-p preprocessor]\n            [variable=value ...] file [...]\n";
 
 # get switches and values
 
 die $Usage unless &Getopts('ace&t&l:m:o:p:rs');
 
-$Arch = defined($opt_a) ? 1 : 0;	# use $(ARCH) macro in output
-$Cc = defined($opt_c) ? 1 : 0;		# output CC lines
+$Arch = defined($opt_a) ? 1 : 0;    # use $(ARCH) macro in output
+$Cc   = defined($opt_c) ? 1 : 0;    # output CC lines
 
 # things to exclude from dependencies
-if (defined(@opt_e)) {
-    if ($#opt_e == $[) {
-	$Exclude = "($opt_e[$[])";
+if (@opt_e) {
+    if ( $#opt_e == $[ ) {
+        $Exclude = "($opt_e[$[])";
     }
     else {
-	for ($i = $[; $i <= $#opt_e; ++$i) {
-	    $Exclude .= "($opt_e[$i])|";
-	}
-	chop($Exclude);		# remove trailing '|'
+        for ( $i = $[ ; $i <= $#opt_e ; ++$i ) {
+            $Exclude .= "($opt_e[$i])|";
+        }
+        chop($Exclude);             # remove trailing '|'
     }
 }
 
 # things to strip from object names
-if (defined(@opt_t)) {
-    if ($#opt_t == $[) {
-	$Strips = "($opt_t[$[])";
+if (@opt_t) {
+    if ( $#opt_t == $[ ) {
+        $Strips = "($opt_t[$[])";
     }
     else {
-	for ($i = $[; $i <= $#opt_t; ++$i) {
-	    $Strips .= "($opt_t[$i])|";
-	}
-	chop($Strips);		# remove trailing '|'
+        for ( $i = $[ ; $i <= $#opt_t ; ++$i ) {
+            $Strips .= "($opt_t[$i])|";
+        }
+        chop($Strips);    # remove trailing '|'
     }
 }
 
-$Library = $opt_l if (defined($opt_l));	# do library depenedencies
-$Makefile = defined($opt_m) ? $opt_m : 'Makefile';	# makefile to modify
-$PPOptions = defined($opt_o) ? $opt_o : '';	# preprocessor options
-$Preprocessor = $opt_p if (defined($opt_p));	# preprocessor
-$Replace = defined($opt_r) ? 1 : 0;	# replace contents of makefile
-$Separate = defined($opt_s) ? 1 : 0;	# output separation line
+$Library      = $opt_l if ( defined($opt_l) );    # do library depenedencies
+$Makefile     = defined($opt_m) ? $opt_m : 'Makefile';  # makefile to modify
+$PPOptions    = defined($opt_o) ? $opt_o : '';        # preprocessor options
+$Preprocessor = $opt_p if ( defined($opt_p) );        # preprocessor
+$Replace      = defined($opt_r) ? 1 : 0;    # replace contents of makefile
+$Separate     = defined($opt_s) ? 1 : 0;    # output separation line
 
 undef($opt_a);
 undef($opt_c);
@@ -95,12 +95,12 @@ undef($opt_s);
 undef(@opt_t);
 
 # Is the makefile readable?
-die "$0: $Makefile: $!\n" if (! -r $Makefile);
+die "$0: $Makefile: $!\n" if ( !-r $Makefile );
 
 # Check for invalid preprocessor options
-@PpOpts = split(' ', $PPOptions);
-@PpOpts = grep(!/^-[BCDIMPRU]/o, @PpOpts);
-die "$0: invalid preprocessor options: @PpOpts\n" if ($#PpOpts >= 0);
+@PpOpts = split( ' ', $PPOptions );
+@PpOpts = grep( !/^-[BCDIMPRU]/o, @PpOpts );
+die "$0: invalid preprocessor options: @PpOpts\n" if ( $#PpOpts >= 0 );
 undef(@PpOpts);
 
 # Make associative arrays for all make variables from the command line
@@ -109,62 +109,62 @@ undef(@PpOpts);
 %Vmap = ();
 for (@ARGV) {
     if (/(\w.*)=(.+)/o) {
-	$Vmap{$2} = $1;
+        $Vmap{$2} = $1;
     }
     else {
-	push(@Sources, $_);
+        push( @Sources, $_ );
     }
 }
 
 # Sort the macros in reverse length order (longest first)
 @Vkeys = sort { length($b) <=> length($a) } keys(%Vmap);
 
-die "$Usage" unless $#Sources >= 0;	# need at least 1 source file
+die "$Usage" unless $#Sources >= 0;    # need at least 1 source file
 
 # are all of the source files readable?
 $badfiles = 0;
 for (@Sources) {
-    if (! -r $_) {
-	warn "$0: $_: $!\n";
-	++$badfiles;
+    if ( !-r $_ ) {
+        warn "$0: $_: $!\n";
+        ++$badfiles;
     }
 }
-exit(1) if $badfiles;	# exit if 1 or more source files is not readable
+exit(1) if $badfiles;    # exit if 1 or more source files is not readable
 
 # Create temporary output file name and set signal handlers to remove
 # the temporary file.
 
 $TempFile = "$Makefile.new.$$";
 
-$SIG{'INT'} = 'cleanup';
+$SIG{'INT'}  = 'cleanup';
 $SIG{'QUIT'} = 'cleanup';
-$SIG{'HUP'} = 'cleanup';
+$SIG{'HUP'}  = 'cleanup';
 
 # open the output file
 
-open(OUTPUT, "> $TempFile") || die "can't open temp file - $!\n";
+open( OUTPUT, "> $TempFile" ) || die "can't open temp file - $!\n";
 select(OUTPUT);
 
 # copy the contents of the makefile if replacement wasn't specified
 
-if (!$Replace) {
-    open(INPUT, "< $Makefile") || die "can't open $Makefile - $!\n";
+if ( !$Replace ) {
+    open( INPUT, "< $Makefile" ) || die "can't open $Makefile - $!\n";
 
     # If separation was requested then copy the make file until the
     # separation line or end of file is found. If separation was not
     # requested then just copy the contents of the makefile.
 
     if ($Separate) {
-	while (<INPUT>) {
-	    /^### DO NOT DELETE THIS LINE/o && last;
-	    print;
-	}
-	print "### DO NOT DELETE THIS LINE - make depend needs it\n\n";
+        while (<INPUT>) {
+            /^### DO NOT DELETE THIS LINE/o && last;
+            print;
+        }
+        print "### DO NOT DELETE THIS LINE - make depend needs it\n\n";
     }
     else {
-	while (<INPUT>) {
-	    print;
-	}
+        while (<INPUT>) {
+            print;
+        }
     }
 
     # don't need the original makefile any more
@@ -173,16 +173,16 @@ if (!$Replace) {
 
 # Output the dependencies for the library itself if doing a library.
 
-if (defined($Library)) {
-    local($Temp);
+if ( defined($Library) ) {
+    local ($Temp);
 
     for (@Sources) {
-	print "$Library: $_\n";
+        print "$Library: $_\n";
     }
     for (@Sources) {
-	$Temp = $_;
-	$Temp =~ s/\.c/.o/o;
-	print "$Library: $Library($Temp)\n";
+        $Temp = $_;
+        $Temp =~ s/\.c/.o/o;
+        print "$Library: $Library($Temp)\n";
     }
     print "\tranlib $Library\n\t-chmod 664 $Library\n\n";
 }
@@ -193,70 +193,70 @@ $badfiles = 0;
 foreach $src (@Sources) {
 
     # get dependencies
-    open(CPP, "$Preprocessor $PPOptions $src|")
-	|| die "'$Preprocessor' for $src failed: $!\n";
+    open( CPP, "$Preprocessor $PPOptions $src|" )
+      || die "'$Preprocessor' for $src failed: $!\n";
 
     %incfiles = ();
     while (<CPP>) {
-	$incfiles{$filename}++ if (($filename) = /^# +\d+ +"(.*)"/o);
+        $incfiles{$filename}++ if ( ($filename) = /^# +\d+ +"(.*)"/o );
     }
     close(CPP);
 
     @dependencies = sort keys(%incfiles);
 
     # do make variable substitution
-    if ($#Vkeys >= 0) {
-	for (@dependencies) {
-	    foreach $key (@Vkeys) {
-		s/$key/\$($Vmap{$key})/;
-	    }
-	}
+    if ( $#Vkeys >= 0 ) {
+        for (@dependencies) {
+            foreach $key (@Vkeys) {
+                s/$key/\$($Vmap{$key})/;
+            }
+        }
     }
 
-    if (defined($Exclude)) {
-	@dependencies = grep(!/$Exclude/, @dependencies);
+    if ( defined($Exclude) ) {
+        @dependencies = grep( !/$Exclude/, @dependencies );
     }
 
-    if ($#dependencies < 0) {
-	print STDERR "$0: no dependencies for $src\n";
-	++$badfiles;
-	next;
+    if ( $#dependencies < 0 ) {
+        print STDERR "$0: no dependencies for $src\n";
+        ++$badfiles;
+        next;
     }
 
     $Object = $src;
     $Object =~ s/\.c/\.o/o;
 
-    if (defined($Strips)) {
-	$Object =~ s/$Strips//g;
+    if ( defined($Strips) ) {
+        $Object =~ s/$Strips//g;
     }
 
     # print dependencies and compiler line to makefile
-    if (defined($Library)) {
-	for (@dependencies) {
-	    print "$Library($Object): $_\n";
-	}
-	if ($Cc) {
-	    print "\t\$(CC) \$(CFLAGS) -c $src";
-	    if ($Arch) {
-		print " -o \$(ARCH)/$Object";
-	    }
-	    print "\n\tar rv $Library $Object\n";
-	    print "\tranlib $Library\n";
-	}
+    if ( defined($Library) ) {
+        for (@dependencies) {
+            print "$Library($Object): $_\n";
+        }
+        if ($Cc) {
+            print "\t\$(CC) \$(CFLAGS) -c $src";
+            if ($Arch) {
+                print " -o \$(ARCH)/$Object";
+            }
+            print "\n\tar rv $Library $Object\n";
+            print "\tranlib $Library\n";
+        }
     }
     else {
-	if ($Arch) {
-	    for (@dependencies) {
-		print '$(ARCH)/', "$Object: $_\n";
-	    }
-	    $Cc && print "\t" , '$(CC) $(CFLAGS) -c ' , "$src", ' -o $@', "\n";
-	}
-	else {
-	    for (@dependencies) {
-		print "$Object: $_\n";
-	    }
-	    $Cc && print "\t" , '$(CC) $(CFLAGS) -c ' , "$src\n";
-	}
+        if ($Arch) {
+            for (@dependencies) {
+                print '$(ARCH)/', "$Object: $_\n";
+            }
+            $Cc && print "\t", '$(CC) $(CFLAGS) -c ', "$src", ' -o $@', "\n";
+        }
+        else {
+            for (@dependencies) {
+                print "$Object: $_\n";
+            }
+            $Cc && print "\t", '$(CC) $(CFLAGS) -c ', "$src\n";
+        }
     }
     print "\n";
 }
@@ -266,73 +266,70 @@ if ($badfiles) {
     exit 1;
 }
 
-rename($Makefile, "$Makefile.BAK")
-    || die "can't rename $Makefile to $Makefile.BAK - $!\n";
+rename( $Makefile, "$Makefile.BAK" )
+  || die "can't rename $Makefile to $Makefile.BAK - $!\n";
 
-rename("$TempFile", $Makefile)
-    || die "can't rename $TempFile to $Makefile - $!\n";
+rename( "$TempFile", $Makefile )
+  || die "can't rename $TempFile to $Makefile - $!\n";
 
 exit 0;
 
-
 sub Getopts {
-    local($argumentative) = @_;
-    local(@args,$_,$first,$rest);
-    local($errs) = 0;
-    local($[) = 0;
+    local ($argumentative) = @_;
+    local ( @args, $_, $first, $rest );
+    local ($errs) = 0;
+    local ($[)    = 0;
 
     @args = split( / */o, $argumentative );
 
-    while(@ARGV && ($_ = $ARGV[0]) =~ /^-(.)(.*)/o) {
-	($first,$rest) = ($1,$2);
-	$pos = index($argumentative,$first);
-	if($pos >= $[) {
-	    if($args[$pos+1] eq ':') {
-		shift(@ARGV);
-		if($rest eq '') {
-		    ++$errs unless @ARGV;
-		    $rest = shift(@ARGV);
-		}
-		eval "\$opt_$first = \$rest;";
-	    }
-	    elsif($args[$pos+1] eq '&') {
-		shift(@ARGV);
-		if($rest eq '') {
-		    ++$errs unless @ARGV;
-		    $rest = shift(@ARGV);
-		}
-		eval "push(\@opt_$first, \$rest);";
-	    }
-	    else {
-		eval "\$opt_$first = 1";
-		if($rest eq '') {
-		    shift(@ARGV);
-		}
-		else {
-		    $ARGV[0] = "-$rest";
-		}
-	    }
-	}
-	else {
-	    print STDERR "Unknown option: $first\n";
-	    ++$errs;
-	    if($rest ne '') {
-		$ARGV[0] = "-$rest";
-	    }
-	    else {
-		shift(@ARGV);
-	    }
-	}
+    while ( @ARGV && ( $_ = $ARGV[0] ) =~ /^-(.)(.*)/o ) {
+        ( $first, $rest ) = ( $1, $2 );
+        $pos = index( $argumentative, $first );
+        if ( $pos >= $[ ) {
+            if ( $args[ $pos + 1 ] eq ':' ) {
+                shift(@ARGV);
+                if ( $rest eq '' ) {
+                    ++$errs unless @ARGV;
+                    $rest = shift(@ARGV);
+                }
+                eval "\$opt_$first = \$rest;";
+            }
+            elsif ( $args[ $pos + 1 ] eq '&' ) {
+                shift(@ARGV);
+                if ( $rest eq '' ) {
+                    ++$errs unless @ARGV;
+                    $rest = shift(@ARGV);
+                }
+                eval "push(\@opt_$first, \$rest);";
+            }
+            else {
+                eval "\$opt_$first = 1";
+                if ( $rest eq '' ) {
+                    shift(@ARGV);
+                }
+                else {
+                    $ARGV[0] = "-$rest";
+                }
+            }
+        }
+        else {
+            print STDERR "Unknown option: $first\n";
+            ++$errs;
+            if ( $rest ne '' ) {
+                $ARGV[0] = "-$rest";
+            }
+            else {
+                shift(@ARGV);
+            }
+        }
     }
     $errs == 0;
 }
-
 
 sub cleanup {
     unlink $TempFile;
     exit 0;
 }
-
 
 # Local Variables:
 # mode: perl
