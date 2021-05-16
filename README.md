@@ -20,14 +20,14 @@
  /* OK */
  b ( c )
  {
-	 return ( c + 2 );
+   return ( c + 2 );
  }
 
  /* will not compile; */
  /* 'b' is a function */
  a ( b )
  {
-	 return ( b + 2 );
+   return ( b + 2 );
  }
 ```
 
