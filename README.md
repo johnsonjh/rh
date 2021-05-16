@@ -17,18 +17,18 @@
 * Function parameters can not have the same names as functions.
 
 ```c
-	/* OK */
-	b ( c )
-	{
-		return ( c + 2 );
-	}
+ /* OK */
+ b ( c )
+ {
+	 return ( c + 2 );
+ }
 
-	/* will not compile; */
-	/* 'b' is a function */
-	a ( b )
-	{
-		return ( b + 2 );
-	}
+ /* will not compile; */
+ /* 'b' is a function */
+ a ( b )
+ {
+	 return ( b + 2 );
+ }
 ```
 
 * The file system operator only works on SunOS 4.1.x
