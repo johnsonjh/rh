@@ -17,8 +17,8 @@
 * Function parameters can not have the same names as functions.
   * Example:
 ```c
-		b(c) { return c + 2; }
-		a(b) { return b + 2; }	/* won't compile - b is a function */ 
+b(c) { return c + 2; }
+a(b) { return b + 2; }	/* won't compile - b is a function */ 
 ```
 
 * The file system operator only works on SunOS 4.1.x
