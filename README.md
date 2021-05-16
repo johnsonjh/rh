@@ -15,10 +15,13 @@
 * The pointer to the error in error messages may be wrong. (Actually, it is more likely to be wrong than correct.)
 
 * Function parameters can not have the same names as functions.
-  * Example:
+
 ```c
+/* OK */
 b(c) { return c + 2; }
-a(b) { return b + 2; }	/* won't compile - b is a function */ 
+
+/* Won't compile; 'b' is a function */
+a(b) { return b + 2; }
 ```
 
 * The file system operator only works on SunOS 4.1.x
