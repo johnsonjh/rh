@@ -1,5 +1,9 @@
 # rh
 
+## Overview
+
+* `rh` is a `find`-like utility with C syntax.
+
 ## Requirements
 
 * An ANSI/ISO C compiler is required
@@ -34,6 +38,12 @@
 * The file system operator only works on SunOS 4.1.x
 
 * No configure script
+
+## History
+
+* This version of `rh` derives from the [Andy Valencia](http://sources.vsta.org:7100/rh/index) version, based on code first posted by Ken Stauffer and published in the late 80's.
+
+   * The code has been changed and mildly enhanced, but is substantially still the same software.
 
 ## Changes by Andy Valencia
 
